@@ -1,1 +1,13 @@
-//Here you will import route files and export the constructor method as shown in lecture code and worked in previous labs.
+//import userRoutes from './users.js';
+import path from 'path';
+
+const constructorMethod = (app) => {
+    app.get('/about', (req, res) => {
+      res.sendFile(path.resolve('static/about.html'));
+    });
+    app.use('*', (req, res) => {
+      res.redirect('/about');
+    });
+  };
+  
+  export default constructorMethod;
