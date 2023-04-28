@@ -7,4 +7,7 @@ export const createUser = async (
   role
 ) => {};
 
-export const checkUser = async (emailAddress, password) => {};
+export const checkUser = async (emailAddress, password) => {
+	
+
+};

@@ -1,5 +1,48 @@
-{{!--
+{{!
 
 registration handelbars
 
---}}
+}}
+
+  <body>
+    <!-- page content -->
+
+      <h2>Sign Up</h2>
+      <form action="/register" method="post" id="registration-form">
+
+        <label for="firstnameInput">First Name:</label>
+        <input type="text" id="firstNameInput" name="firstNameInput">
+
+        <br>
+        <br>
+        <label for="lastnameInput">Last Name:</label>
+        <input type="text" id="lastNameInput" name="lastNameInput">
+        <br>
+        <br>
+        <label for="emailAddressInput">Email:</label>
+        <input type="email" id="emailAddressInput" name="emailAddressInput">
+        <br>
+        <br>
+        <label for="passwordInput">Password:</label>
+        <input type="password" id="passwordInput" name="passwordInput">
+        <br>
+        <br>
+        <label for="confirmPasswordInput">Confirm Password:</label>
+        <input
+          type="password"
+          id="confirmPasswordInput"
+          name="confirmPasswordInput"
+        >
+        <br>
+        <br>
+        <input type="submit" value="Register"  class="submitButton">
+      </form>
+
+      <div id="regErrorDesc">
+
+      </div>
+
+    <script src="../public/js/lab10.js"></script>
+  </body>
+
+
