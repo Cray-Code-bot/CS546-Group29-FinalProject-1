@@ -37,3 +37,52 @@ body {
 
 	background-color: rgb(206, 229, 223);
 }
+
+h2 {
+	color: blue;
+  }
+  
+  #regErrorDiv {
+	color: red;
+  }
+
+  a {
+	color: darkgreen;
+	font-size: large;
+  }
+  
+  p {
+	font-family: "Times New Roman";
+	font-size: large;
+  }
+  
+  .submitButton {
+	font-size: large;
+	font-weight: 100;
+  }
+  
+  #firstNameInput{
+	  font-size: larger;
+	  font-family: 'Gill Sans';
+  }
+  
+  #lastNameInput{
+	  font-size: larger;
+	  font-family: 'Gill Sans';
+  }
+  
+  #emailAddressInput{
+	  font-size: larger;
+	  font-family: 'Gill Sans';
+  }
+  
+  #passwordInput{
+	  font-size: larger;
+	  font-family: 'Gill Sans';
+  }
+  
+  #confirmPasswordInput{
+	  font-size: larger;
+	  font-family: 'Gill Sans';
+  }
+
