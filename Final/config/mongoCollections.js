@@ -18,6 +18,10 @@ const getCollectionFn = (collection) => {
 /* Now, you can list your collections here: 
 NOTE: YOU WILL NEED TO CHANGE THE CODE BELOW AND UNCOMMENT IT TO HAVE THE COLLECTION(S) REQUIRED BY THE ASSIGNMENT */
 
+//for house
+const getHousesCollection = getCollectionFn('houses');
+export const houses = getHousesCollection;
+
 //export const posts = getCollectionFn('posts');
 export const users=getCollectionFn('users');
 export const accommodations=getCollectionFn('accommodations');
