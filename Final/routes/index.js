@@ -1,9 +1,14 @@
 //import userRoutes from './users.js';
-
+import housesRouter from './houses.js';
 import path from 'path';
 import auth_routes from "./auth_routes.js";
 
 const constructorMethod = (app) => {
+  app.use('/houses', housesRouter);
+  
+  app.get('/', (req, res) => {
+        res.redirect('/houses');
+    });
 
   app.get('/about', (req, res) => {
     res.sendFile(path.resolve('static/about.html'));
