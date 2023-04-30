@@ -1,6 +1,16 @@
-{{!--
+<form method="POST" class="login-form">
+    <div class="form-email">
+        <label for="emailAddressInput">Email Address:</label>
+        <input type="email" name="emailAddressInput" class="login-form-email" id="emailAddressInput" oninput=checkCredentials()>
+    </div>
+    <p class="error-email" hidden></p>
+    <div class="form-password">
+        <label for="passwordInput">Enter Password:</label>
+        <input type="password" name="passwordInput" class="login-form-password" id="passwordInput" oninput=checkCredentials()>
+    </div>
+    <p class="error-password" hidden></p>
+    <button type="submit" class="submit-button" disabled>Login</button>
+    <p class="invalid-credentials"><span style="color:red">{{message}}</span></p>
+</form>
 
-login form handlebar template
-
---}}
-
+<script src="public/js/login_validator.js"> </script>

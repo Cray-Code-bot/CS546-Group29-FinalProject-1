@@ -2,7 +2,7 @@
 import { Router } from "express";
 import { checkUser, createUser } from "../data/users.js";
 import session from "express-session";
-
+import validation from '../helpers.js';
 
 const router = Router();
 
@@ -132,11 +132,40 @@ router
     }
   });
 
-  router
+router
   .route("/login")
   .get(async (req, res) => {
     //code here for GET
-    res.render("login");
+    res.render('login', {title:'login'});
+  })
+  .post(async (req, res) => {
+    //code here for POST
+    let emailAddressInput = req.body.emailAddressInput;
+    let passwordInput = req.body.passwordInput;
+    try {
+      emailAddressInput = validation.checkEmail(emailAddressInput);
+      passwordInput = validation.checkPassword(passwordInput);
+    } catch (e) {
+      return res.status(400).render('login', {title: 'Error', message: e});
+    }
+
+    try {
+      const user = await checkUser(emailAddressInput, passwordInput);
+      req.session.user = {firstName: user.firstName, lastName: user.lastName, emailAddress: user.emailAddress};
+      res.redirect('/dashboard');
+    } catch (e) {
+      res.status(400).render('login', {title: 'Error', message: e});
+    }
+});
+  
+router.route("/dashboard")
+  .get(async (req, res) => {
+    if (req.session.user) {
+      res.render('dashboard', {title: 'dashboard'});
+      return;
+    } else {
+      res.redirect('/login');
+    }
   })
 
 router.route("/protected").get(async (req, res) => {
@@ -158,7 +187,12 @@ router.route("/error").get(async (req, res) => {
   //code here for GET
 });
 
-
-
+router.route('/logout').get(async (req, res) => {
+  //code here for GET
+  if (req.session.user) {
+    req.session.destroy()
+    res.render('logout', {title: "logout"})
+  }
+});
 
 export default router;
