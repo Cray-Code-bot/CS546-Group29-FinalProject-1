@@ -1,5 +1,9 @@
 import express from "express";
 const app = express();
+import morgan from "morgan";
+import bodyParser from "body-parser";
+import { housesData as data } from "./data/index.js";
+import housesRoutes from "./routes/houses.js";
 import configRoutes from "./routes/index.js";
 import { fileURLToPath } from "url";
 import { dirname } from "path";
@@ -23,6 +27,9 @@ const rewriteUnsupportedBrowserMethods = (req, res, next) => {
   next();
 };
 
+app.use(morgan("dev"));
+app.use(bodyParser.json());
+
 app.use("/public", staticDir);
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -30,6 +37,8 @@ app.use(rewriteUnsupportedBrowserMethods);
 
 app.engine("handlebars", exphbs.engine({ defaultLayout: "main" }));
 app.set("view engine", "handlebars");
+
+app.use(express.urlencoded({ extended: true }));
 
 app.use(
   session({
@@ -126,6 +135,7 @@ app.use((req, res, next) => {
 
 
 configRoutes(app);
+app.use("/", housesRoutes);
 
 app.listen(3000, () => {
   console.log("We've now got a server!");
