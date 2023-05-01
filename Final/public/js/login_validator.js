@@ -1,6 +1,6 @@
 let emailAddress = document.getElementById("emailAddressInput");
 let passwordInput = document.getElementById("passwordInput");
-let button = document.querySelector('.submit-button');
+let button = document.querySelector('.login-button');
 let errorLogin = document.querySelector(".error-email");
 let errorPassword = document.querySelector(".error-password")
 const regex = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
