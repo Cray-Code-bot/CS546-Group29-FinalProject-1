@@ -1,3 +1,11 @@
-{{#each l}}
-  <li>{{this.housedish}}</li>
-{{/each}}
+<body>
+  <h1>{{house.type}} in {{house.city}}, {{house.state}}</h1>
+  <p>Rent: {{house.rent}}</p>
+  <p>Description: {{house.description}}</p>
+  <form action="/houses/{{house._id}}/edit" method="get">
+    <button type="submit">Edit</button>
+  </form>
+  <form action="/houses/{{house._id}}/delete" method="post" style="display:inline;">
+    <button type="submit">Delete</button>
+ </form>
+</body>
