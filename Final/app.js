@@ -74,7 +74,7 @@ app.use("/login", (req, res, next) => {
   }
 });
 
-app.use("/dashboard", (req, res, next) => {
+app.use("/dashboard1", (req, res, next) => {
   console.log(req.session.id);
   if (!req.session.user) {
     res.redirect('/login');

@@ -16,4 +16,4 @@ const closeConnection = async () => {
   await _connection.close();
 };
 
-export default { dbConnection, closeConnection };
+export { dbConnection, closeConnection };
