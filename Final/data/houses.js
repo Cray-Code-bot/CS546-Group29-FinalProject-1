@@ -14,7 +14,7 @@ const create = async (houseData) => {
     state: houseData.state,
     zip: houseData.zip,
     rent: houseData.rent,
-    description: houseData.description,
+    description: houseData.description
   };
 
   const insertInfo = await housesCollection.insertOne(newHouse);
@@ -85,7 +85,7 @@ const update = async (id, updatedHouse) => {
     throw "You must provide a valid state";
   }
 
-  if (!updatedHouse.zip || typeof updatedHouse.zip !== 'string') {
+  if (!updatedHouse.zip || typeof updatedHouse.zip !== 'string' || updatedHouse.zip.length !== 5) {
     throw "You must provide a valid zip code";
   }
 
