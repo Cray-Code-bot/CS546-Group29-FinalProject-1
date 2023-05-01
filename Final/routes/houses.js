@@ -1,8 +1,19 @@
 import express from 'express';
 import * as housesData from '../data/houses.js';
 import xss from 'xss';
+import multer from 'multer';
 
 const router = express.Router();
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, 'public/uploads/');
+  },
+  filename: (req, file, cb) => {
+    cb(null, Date.now() + '-' + file.originalname);
+  },
+});
+
+const upload = multer({ storage: storage });
 
 
 router.get('/', async (req, res) => {
@@ -27,6 +38,9 @@ router.get('/list', async (req, res) => {
 });
 
 router.get("/add", async (req, res) => {
+  if (!req.session.user) {
+    return res.status(400).render("houses/error", { message: "You need to login"});
+  }
   try {
     res.render("houses/add");
   } catch (e) {
@@ -41,8 +55,12 @@ function validateHouseInfo(houseInfo) {
     return { valid: false, message: "Please enter all the fields." };
   }
 
-  if(type.trim().length == 0 || category.trim().length == 0 || city.trim().length == 0 || state.trim().length == 0|| zip.trim().length == 0|| rent.trim().length == 0) {
+  if(type.trim().length == 0 || category.trim().length == 0 || city.trim().length == 0 || state.trim().length == 0|| zip.trim().length == 0) {
     return { valid: false, message: "Please do not only enter space." };
+  }
+
+  if(zip.length !== 5){
+    return { valid: false, message: "Zip should be 5 digits only." };
   }
 
   if (typeof type !== 'string' || typeof category !== 'string' || typeof city !== 'string' || typeof state !== 'string' || typeof zip !== 'string' || typeof parseFloat(rent) !== 'number') {
@@ -63,6 +81,10 @@ router.post('/post', async (req, res) => {
     description: xss(req.body.description)
   };
 
+  if (!req.session.user) {
+    return res.status(400).render("houses/error", { message: "You need to login"});
+  }
+
   const validationResult = validateHouseInfo(houseInfo);
   if (!validationResult.valid) {
     return res.status(400).render("houses/error", { message: validationResult.message });
@@ -79,8 +101,19 @@ router.post('/post', async (req, res) => {
     res.status(400).render("houses/error", { message: "not created", error: e });
   }
 });
+router.get('/:id', async (req, res) => {
+  try {
+    const house = await housesData.getById(req.params.id);
+    res.render('houses/houseprofile', { house });
+  } catch (e) {
+    res.status(404).render('houses/error', { message: 'House not found', error: e });
+  }
+});
 
-router.get('/house/:id/delete', async (req, res) => {
+router.post('/:id/delete', async (req, res) => {
+  if (!req.session.user) {
+    return res.status(400).render("houses/error", { message: "You need to login"});
+  }
   try {
     const houseId = req.params.id;
     console.log('Deleting house with id:', houseId);
@@ -92,22 +125,59 @@ router.get('/house/:id/delete', async (req, res) => {
   }
 });
 
-router.put('/:id/edit', async (req, res) => {
+router.get('/:id/edit', async (req, res) => {
+  if (!req.session.user) {
+    return res.status(400).render("houses/error", { message: "You need to login"});
+  }
   try {
-    const updatedHouse = await housesData.update(req.params.id, req.body);
-    res.status(200).json(updatedHouse);
+    const house = await housesData.getById(req.params.id);
+    res.render('houses/edit', { house });
+  } catch (e) {
+    res.status(404).render('houses/error', { message: 'House not found', error: e });
+  }
+});
+
+router.post('/:id/edit', async (req, res) => {
+  try {
+    let houseInfo = {
+      type: xss(req.body.type),
+      category: xss(req.body.category),
+      city: xss(req.body.city),
+      state: xss(req.body.state),
+      zip: xss(req.body.zip),
+      rent: parseFloat(xss(req.body.rent)), 
+      description: xss(req.body.description),
+    };
+
+    if (!req.session.user) {
+      return res.status(400).render("houses/error", { message: "You need to login"});
+    }
+
+    const validationResult = validateHouseInfo(houseInfo);
+    if (!validationResult.valid) {
+      return res.status(400).render("houses/error", { message: validationResult.message });
+    }
+
+    const updatedHouse = await housesData.update(req.params.id, houseInfo);
+    res.redirect('/houses');
+  } catch (e) {
+    console.error('Error during house update:', e);
+    res.status(500).render('houses/error', { message: `Update failed: ${e.message}`, error: e });
+  }
+});
+
+
+router.post('/houses', async (req, res) => {
+  if (!req.session.user) {
+    return res.status(400).render("houses/error", { message: "You need to login"});
+  }
+  try {
+    const newHouse = await housesData.create(req.body);
+    res.status(201).json(newHouse);
   } catch (e) {
     res.status(500).json({ error: e });
   }
 });
-/*
-router.get('/:id/edit', async (req, res) => {
-  try {
-    const house = await housesData.get(req.params.id);
-    res.render('houses/edit', { house });
-  } catch (e) {
-    res.status(404).render('houses/error', { error: e });
-  }
-});*/
+
 
 export default router;
