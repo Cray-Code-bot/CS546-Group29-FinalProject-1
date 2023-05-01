@@ -11,35 +11,12 @@
 </head>
 <body>
     <h1>Houses List</h1>
-    <table>
-        <thead>
-            <tr>
-                <th>Type</th>
-                <th>Category</th>
-                <th>City</th>
-                <th>State</th>
-                <th>Zip</th>
-                <th>Rent</th>
-                <th>Description</th>
-            </tr>
-        </thead>
-        <tbody>
             {{#each housesList}}
-                <tr>
-                    <td>{{this.type}}</td>
-                    <td>{{this.category}}</td>
-                    <td>{{this.city}}</td>
-                    <td>{{this.state}}</td>
-                    <td>{{this.zip}}</td>
-                    <td>{{this.rent}}</td>
-                    <td>{{this.description}}</td>
-                    <td>
-                        <a href="/house/{{this._id}}/edit">Edit</a>
-                        <a href="/house/{{this._id}}/delete">Delete</a>
-                    </td>
-                </tr>
+            <div class="house">
+                <h2>{{this.type}} in {{this.city}}, {{this.state}}</h2>
+                <p>Rent: {{this.rent}}</p>
+                <a href="/houses/{{this._id}}">View House Profile</a>
+            </div>
             {{/each}}
-        </tbody>
-    </table>
 </body>
 </html>
