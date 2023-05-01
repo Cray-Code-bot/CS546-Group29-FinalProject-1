@@ -3,6 +3,7 @@ import { Router } from "express";
 import { checkUser, createUser } from "../data/users.js";
 import session from "express-session";
 import validation from '../helpers.js';
+import * as housesData from '../data/houses.js';
 
 const router = Router();
 
@@ -161,7 +162,12 @@ router
 router.route("/dashboard")
   .get(async (req, res) => {
     if (req.session.user) {
-      res.render('dashboard', {title: 'dashboard'});
+      try {
+        const housesList = await housesData.getAll();
+        res.status(200).render('dashboard', {title: 'dashboard', houses: housesList});
+      } catch (e) {
+        res.status(400).render("error", { title: 'error', message: e });
+      }
       return;
     } else {
       res.redirect('/login');
