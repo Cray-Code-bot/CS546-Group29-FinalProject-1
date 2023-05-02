@@ -1,5 +1,7 @@
 //You can add and export any helper functions you want here. If you aren't using any, then you can just leave this file as is.
 
+import {ObjectId} from 'mongodb';
+
 const exportedMethods = {
     checkName (name, varName) {
         if (!name) throw `Error: You must supply a ${varName}!`;
@@ -13,6 +15,19 @@ const exportedMethods = {
         if (name.length < 2 || name.length > 25) throw `Error: ${varName} cannot be less than 2 or more than 25`;
         if (regex.test(name)) throw `Error: ${varName} cannot contain digits`;
         return (name);
+    },
+
+    checkId(id, varName) {
+        if (!id) throw `Error: You must provide a ${varName}`;
+        if (typeof id !== 'string') throw `Error:${varName} must be a string`;
+        id = id.trim();
+        if (id.length === 0)
+          throw `Error: ${varName} cannot be an empty string or just spaces`;
+        if (!ObjectId.isValid(id)) throw [
+          400,
+          `Error: Update failed, ${varName} is not a valid object ID`
+        ];
+        return id;
     },
 
     checkEmail (email) {

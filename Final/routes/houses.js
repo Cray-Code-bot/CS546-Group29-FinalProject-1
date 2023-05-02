@@ -1,7 +1,9 @@
 import express from 'express';
 import * as housesData from '../data/houses.js';
+import * as commentsData from '../data/comments.js';
 import xss from 'xss';
 import multer from 'multer';
+import validation from '../helpers.js';
 
 const router = express.Router();
 const storage = multer.diskStorage({
@@ -102,12 +104,34 @@ router.post('/post', async (req, res) => {
     res.status(400).render("houses/error", { message: "not created", error: e });
   }
 });
-router.get('/:id', async (req, res) => {
+
+router
+  .route('/:id')
+  .get(async (req, res) => {
+    try {
+      req.params.id = validation.checkId(req.params.id, 'Id URL Param');
+      const house = await housesData.getById(req.params.id);
+      return res.status(200).render("houseDetails", {title: 'Post Details', house: house});
+    } catch (e) {
+      res.status(404).json(e);
+    }
+  })
+
+.post(async (req, res) => {
   try {
+    req.params.id = validation.checkId(req.params.id, 'Id URL Param');
+    if (req.params.id.trim() == "") throw 'Comment cannot be empty';
+  } catch(e) {
+    res.status(404).render('error', {title: 'error', message: e})
+  }
+
+  try {
+    const newComment = await commentsData.createComment(req.session.user, req.params.id, req.body.commentInput);
+    if (newComment != true) throw 'new comment cannot be addded'
     const house = await housesData.getById(req.params.id);
-    res.render('houses/houseprofile', { house });
+    return res.status(200).render("houseDetails", {title: 'Post Details', house: house});
   } catch (e) {
-    res.status(404).render('houses/error', { message: 'House not found', error: e });
+    res.status(400).render('error', {title: 'error', message: e});
   }
 });
 
