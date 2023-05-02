@@ -86,71 +86,63 @@ h2 {
 	  font-family: 'Gill Sans';
   }
 
-  .website-intro {
-	margin-bottom: 20px;
-  }
+.website-intro {
+  	margin-bottom: 20px;
+}
 
-  .search-form {
-	display: flex;
-	flex-direction: column;
-	align-items: center;
-  }
+.search-form {
+	  display: flex;
+    justify-content: center;
+	  align-items: center;
+}
   
-  .form-row {
-	display: flex;
-	flex-direction: row;
-	align-items: center;
-  }
+.search-group {
+	  display: flex;
+	  flex-direction: column;
+	  margin-right: 1rem;
+}
   
-  .form-group {
-	display: flex;
-	flex-direction: column;
-	margin-right: 1rem;
-  }
-  
-  .form-group label {
-	font-size: 1rem;
-	margin-bottom: 0.5rem;
-  }
+.search-group label {
+	  font-size: 1rem;
+	  margin-bottom: 0.5rem;
+}
 
-  .form-group .search-input {
-	font-size: 1rem;
-  }
+.search-group .search-input {
+	  font-size: 1rem;
+}
 
-  .form-group .search-button {
-	font-size: 1rem;
-	margin-left: 2rem;
-  }
+.search-group .search-button {
+	  font-size: 1rem;
+	  margin-left: 2rem;
+}
 
-  .sort-form {
-	position: absolute;
-	left: 3%;
-	top: 40;
-	border: 2px solid #ccc;
-  	padding: 10px;
-  }
+.sort-form {
+	  position:absolute;
+	  left: 3%;
+	  top: 40;
+}
 
-  .sort-group {
-	margin-bottom: 10px;
-  }
+.sort-group {
+	  margin-bottom: 10px;
+}
 
-  .sort-group select, input {
-	width: 100px;
-	padding: 5px;
-	font-size: 12px;
-  }
+.sort-group select, input {
+	  width: 100px;
+	  padding: 5px;
+	  font-size: 0.8rem;
+}
 
-  .sort-group label {
-	display: block;
-	margin-bottom: 5px;
-	font-size: 12px;
-  }
+.sort-group label {
+	  display: block;
+	  margin-bottom: 5px;
+	  font-size: 0.8rem;
+}
 
-  .main-element {
-	display: flex;
-	justify-content: center;
-	align-items: center;
-  }
+.main-element {
+	  display: flex;
+	  justify-content: center;
+	  align-items: center;
+}
 
 .user-nav {
     display: flex;
@@ -172,17 +164,17 @@ h2 {
 }
 
 header {
-	border-bottom: 1px solid #afafaf;
+	  border-bottom: 1px solid #afafaf;
 }
   
 .login-form label {
-	margin-top: 1rem;
+	  margin-top: 1rem;
     display: block;
     margin-bottom: 0.25rem;
 }
   
 .login-form input {
-	margin-top: 1rem;
+	  margin-top: 1rem;
     display: block;
     width: 40%;
     padding: 0.5rem;
@@ -214,7 +206,7 @@ header {
 
 .login-button,
   .register-button {
-	display: inline-block;
+	  display: inline-block;
   	vertical-align: middle;
 }
 
@@ -240,7 +232,7 @@ footer {
     bottom: 0;
     text-align: center;
     width: 99%;
-	border-top: 1px solid #afafaf;
+	  border-top: 1px solid #afafaf;
 }
 
 footer a {
