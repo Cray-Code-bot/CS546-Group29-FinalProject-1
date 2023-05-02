@@ -98,7 +98,7 @@ router.post('/post', async (req, res) => {
   try {
     const newhouse = await housesData.create(houseInfo);
     console.log("newhouse", newhouse);
-    res.status(200).render("houses/message", { message: "house created successfully" });
+    res.redirect('/houses/' + newhouse._id);
   } catch (e) {
     console.error('Error during house creation:', e);
     res.status(400).render("houses/error", { message: "not created", error: e });
