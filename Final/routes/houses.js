@@ -72,6 +72,7 @@ function validateHouseInfo(houseInfo) {
 
 router.post('/post', async (req, res) => {
   let houseInfo = {
+    user: xss(req.session.user.emailAddress),
     type: xss(req.body.type),
     category: xss(req.body.category),
     city: xss(req.body.city),
@@ -116,6 +117,12 @@ router.post('/:id/delete', async (req, res) => {
   }
   try {
     const houseId = req.params.id;
+    const house = await housesData.getById(houseId);
+
+    if (req.session.user.emailAddress !== house.user) {
+      return res.status(400).render("houses/error", { message: "You are not the owner of this house"});
+    }
+    
     console.log('Deleting house with id:', houseId);
     await housesData.remove(houseId);
     res.status(200).render('houses/message', { message: 'House deleted successfully' });
@@ -139,6 +146,13 @@ router.get('/:id/edit', async (req, res) => {
 
 router.post('/:id/edit', async (req, res) => {
   try {
+    const houseId = req.params.id;
+    const house = await housesData.getById(houseId);
+
+    if (req.session.user.emailAddress !== house.user) {
+      return res.status(400).render("houses/error", { message: "You are not the owner of this house"});
+    }
+    
     let houseInfo = {
       type: xss(req.body.type),
       category: xss(req.body.category),
