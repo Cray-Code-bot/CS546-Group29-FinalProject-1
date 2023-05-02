@@ -4,6 +4,8 @@ import * as commentsData from '../data/comments.js';
 import xss from 'xss';
 import multer from 'multer';
 import validation from '../helpers.js';
+import upload from "../utils/multer.js";
+import cloudinary from "../utils/cloudinary.js"
 
 const router = express.Router();
 const storage = multer.diskStorage({
@@ -72,7 +74,29 @@ function validateHouseInfo(houseInfo) {
   return { valid: true };
 }
 
-router.post('/post', async (req, res) => {
+router.post('/post',upload.array("images",5), async (req, res) => {
+
+  try{
+    let imageFiles=req.files;
+
+    if(!imageFiles){
+        return res.status(400).json({message:"No images attached!"});
+    }
+
+    let imageUrls=[];
+
+    let imagePublicIds=[];
+
+   for(const file of imageFiles){
+     const result=await cloudinary.uploader.upload(file.path);
+     imageUrls.push(result.secure_url);
+     imagePublicIds.push(result.public_id);
+   }
+  }
+  catch(err){
+    res.status(400).render("houses/error",{message:err});
+  }
+
   let houseInfo = {
     user: xss(req.session.user.emailAddress),
     type: xss(req.body.type),
