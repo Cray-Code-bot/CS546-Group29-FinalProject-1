@@ -20,6 +20,13 @@
             </address>
             <p>Rent: {{house.rent}}</p>
             <p>Description: {{house.description}}</p>
+            <p>PostDate: {{house.postDate}}</p>
+            <form action="/houses/{{house._id}}/edit" method="get">
+                <button type="submit">Edit</button>
+            </form>
+            <form action="/houses/{{house._id}}/delete" method="post" style="display:inline;">
+                <button type="submit">Delete</button>
+            </form>
     </div>
 </section>
 
