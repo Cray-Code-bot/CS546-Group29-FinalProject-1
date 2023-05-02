@@ -8,13 +8,17 @@ const create = async (houseData) => {
   const housesCollection = await houseCollection();
 
   const newHouse = {
+    user: houseData.user,
     type: houseData.type,
     category: houseData.category,
     city: houseData.city,
     state: houseData.state,
     zip: houseData.zip,
     rent: houseData.rent,
-    description: houseData.description
+    description: houseData.description,
+    postDate: new Date().toUTCString(),
+    comments: [],
+    reviews: []
   };
 
   const insertInfo = await housesCollection.insertOne(newHouse);
@@ -105,7 +109,8 @@ const update = async (id, updatedHouse) => {
       state: updatedHouse.state,
       zip: updatedHouse.zip,
       rent: updatedHouse.rent,
-      description: updatedHouse.description
+      description: updatedHouse.description,
+      postDate: new Date().toUTCString()
     }
   };
 
