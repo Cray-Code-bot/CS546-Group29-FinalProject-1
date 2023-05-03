@@ -8,16 +8,6 @@ import upload from "../utils/multer.js";
 import cloudinary from "../utils/cloudinary.js"
 
 const router = express.Router();
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, 'public/uploads/');
-  },
-  filename: (req, file, cb) => {
-    cb(null, Date.now() + '-' + file.originalname);
-  },
-});
-
-const upload = multer({ storage: storage });
 
 
 router.get('/', async (req, res) => {
@@ -53,21 +43,18 @@ router.get("/add", async (req, res) => {
 });
 
 function validateHouseInfo(houseInfo) {
-  const { type, category, city, state, zip, rent } = houseInfo;
+  const { type, category, city, state, gender, rent,description } = houseInfo;
 
-  if (!type || !category || !city || !state || !zip || !rent) {
+  if (!type || !category || !city || !state || !gender || !rent || !description) {
     return { valid: false, message: "Please enter all the fields." };
   }
 
-  if(type.trim().length == 0 || category.trim().length == 0 || city.trim().length == 0 || state.trim().length == 0|| zip.trim().length == 0) {
+  if(type.trim().length == 0 || category.trim().length == 0 || city.trim().length == 0 || state.trim().length == 0) {
     return { valid: false, message: "Please do not only enter space." };
   }
 
-  if(zip.length !== 5){
-    return { valid: false, message: "Zip should be 5 digits only." };
-  }
 
-  if (typeof type !== 'string' || typeof category !== 'string' || typeof city !== 'string' || typeof state !== 'string' || typeof zip !== 'string' || typeof parseFloat(rent) !== 'number') {
+  if (typeof type !== 'string' || typeof category !== 'string' || typeof city !== 'string' || typeof state !== 'string') {
     return { valid: false, message: "Invalid data type." };
   }
 
@@ -76,16 +63,15 @@ function validateHouseInfo(houseInfo) {
 
 router.post('/post',upload.array("images",5), async (req, res) => {
 
+  let imageUrls=[];
+
+  let imagePublicIds=[];
   try{
     let imageFiles=req.files;
 
     if(!imageFiles){
         return res.status(400).json({message:"No images attached!"});
     }
-
-    let imageUrls=[];
-
-    let imagePublicIds=[];
 
    for(const file of imageFiles){
      const result=await cloudinary.uploader.upload(file.path);
@@ -101,12 +87,17 @@ router.post('/post',upload.array("images",5), async (req, res) => {
     user: xss(req.session.user.emailAddress),
     type: xss(req.body.type),
     category: xss(req.body.category),
+    type: xss(req.body.roomType),
+    category: xss(req.body.roomCategory),
+    gender:xss(req.body.gender),
     city: xss(req.body.city),
     state: xss(req.body.state),
-    zip: xss(req.body.zip),
     rent: xss(req.body.rent),
     description: xss(req.body.description)
   };
+
+  houseInfo.imageUrls=imageUrls;
+  houseInfo.imagePublicIds=imagePublicIds;
 
   if (!req.session.user) {
     return res.status(400).render("houses/error", { message: "You need to login"});

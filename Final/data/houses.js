@@ -1,6 +1,6 @@
 import { houses as houseCollection } from '../config/mongoCollections.js';
 import { ObjectId } from 'mongodb';
-
+import { users } from '../config/mongoCollections.js';
 
 //create new house
 const create = async (houseData) => {
@@ -13,12 +13,8 @@ const create = async (houseData) => {
     category: houseData.category,
     city: houseData.city,
     state: houseData.state,
-    zip: houseData.zip,
     rent: houseData.rent,
-    description: houseData.description,
-    postDate: new Date().toUTCString(),
-    comments: [],
-    reviews: []
+    description: houseData.description
   };
 
   const insertInfo = await housesCollection.insertOne(newHouse);
@@ -26,6 +22,9 @@ const create = async (houseData) => {
 
   const newId = insertInfo.insertedId;
 
+  const userCollection=await users();
+
+  
   const house = await getById(newId.toString()); // Changed this line
   return JSON.parse(JSON.stringify(house));
 };
