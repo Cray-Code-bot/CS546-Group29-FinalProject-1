@@ -16,7 +16,10 @@ const create = async (houseData) => {
     rent: houseData.rent,
     description: houseData.description,
     imageUrls:houseData.imageUrls,
-    imagePublicIds:houseData.imagePublicIds
+    imagePublicIds:houseData.imagePublicIds,
+    postDate: new Date().toUTCString(),
+    comments: [],
+    reviews: [],
   };
 
   const insertInfo = await housesCollection.insertOne(newHouse);

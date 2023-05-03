@@ -79,7 +79,7 @@ router.post('/post',upload.array("images",5), async (req, res) => {
      imageUrls.push(result.secure_url);
      imagePublicIds.push(result.public_id);
    }
-   
+
   }
   catch(err){
     res.status(400).render("houses/error",{message:err});
@@ -87,8 +87,6 @@ router.post('/post',upload.array("images",5), async (req, res) => {
 
   let houseInfo = {
     user: xss(req.session.user.emailAddress),
-    type: xss(req.body.type),
-    category: xss(req.body.category),
     type: xss(req.body.roomType),
     category: xss(req.body.roomCategory),
     gender:xss(req.body.gender),
