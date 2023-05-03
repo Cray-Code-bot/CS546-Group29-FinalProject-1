@@ -14,7 +14,9 @@ const create = async (houseData) => {
     city: houseData.city,
     state: houseData.state,
     rent: houseData.rent,
-    description: houseData.description
+    description: houseData.description,
+    imageUrls:houseData.imageUrls,
+    imagePublicIds:houseData.imagePublicIds
   };
 
   const insertInfo = await housesCollection.insertOne(newHouse);

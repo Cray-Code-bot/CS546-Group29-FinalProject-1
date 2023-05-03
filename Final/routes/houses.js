@@ -66,6 +66,7 @@ router.post('/post',upload.array("images",5), async (req, res) => {
   let imageUrls=[];
 
   let imagePublicIds=[];
+
   try{
     let imageFiles=req.files;
 
@@ -78,6 +79,7 @@ router.post('/post',upload.array("images",5), async (req, res) => {
      imageUrls.push(result.secure_url);
      imagePublicIds.push(result.public_id);
    }
+   
   }
   catch(err){
     res.status(400).render("houses/error",{message:err});
