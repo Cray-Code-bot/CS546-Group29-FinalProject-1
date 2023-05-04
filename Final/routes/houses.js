@@ -2,10 +2,10 @@ import express from 'express';
 import * as housesData from '../data/houses.js';
 import * as commentsData from '../data/comments.js';
 import xss from 'xss';
-import multer from 'multer';
 import validation from '../helpers.js';
 import upload from "../utils/multer.js";
 import cloudinary from "../utils/cloudinary.js"
+import { getRounds } from 'bcrypt';
 
 const router = express.Router();
 
@@ -61,7 +61,13 @@ function validateHouseInfo(houseInfo) {
   return { valid: true };
 }
 
-router.post('/post',upload.array("images",5), async (req, res) => {
+router.post('/post',upload.array("images",10), async (req, res) => {
+
+  if (!req.session.user) {
+    return res.status(400).render("houses/error", { message: "You need to login"});
+  }
+
+  let emailAddress=xss(req.session.user.emailAddress);
 
   let imageUrls=[];
 
@@ -70,8 +76,8 @@ router.post('/post',upload.array("images",5), async (req, res) => {
   try{
     let imageFiles=req.files;
 
-    if(!imageFiles){
-        return res.status(400).json({message:"No images attached!"});
+    if(imageFiles.length==0){
+        return res.status(400).render("houses/error",{message:"No images attached!"});
     }
 
    for(const file of imageFiles){
@@ -85,33 +91,74 @@ router.post('/post',upload.array("images",5), async (req, res) => {
     res.status(400).render("houses/error",{message:err});
   }
 
-  let houseInfo = {
-    user: xss(req.session.user.emailAddress),
-    type: xss(req.body.roomType),
-    category: xss(req.body.roomCategory),
-    gender:xss(req.body.gender),
-    city: xss(req.body.city),
-    state: xss(req.body.state),
-    rent: xss(req.body.rent),
-    description: xss(req.body.description)
-  };
-
-  houseInfo.imageUrls=imageUrls;
-  houseInfo.imagePublicIds=imagePublicIds;
-
-  if (!req.session.user) {
-    return res.status(400).render("houses/error", { message: "You need to login"});
-  }
-
-  const validationResult = validateHouseInfo(houseInfo);
-  if (!validationResult.valid) {
-    return res.status(400).render("houses/error", { message: validationResult.message });
-  }
-
-  console.log('houseInfo before create:', houseInfo);
+  let roomType=xss(req.body.roomType);
+  let roomCategory=xss(req.body.roomCategory);
+  let gender=xss(req.body.gender);
+  let city=xss(req.body.city);
+  let state=xss(req.body.state);
+  let rent=xss(req.body.rent);
+  let description=xss(req.body.description); 
 
   try {
-    const newhouse = await housesData.create(houseInfo);
+
+  roomType=roomType.trim().toLowerCase();
+  roomCategory=roomCategory.trim().toLowerCase();
+  gender=gender.trim().toLowerCase();
+  city=city.trim().toLowerCase();
+
+    if(!roomType || !roomCategory || !gender || !city || !state || !rent || !description){
+      throw "Enter all the fields";
+    }
+    
+    if(roomType.trim().length==0 || roomCategory.trim().length==0 || gender.trim().length==0 || city.trim().length==0 || 
+          state.trim().length==0 || rent.trim().length==0 || description.trim().length==0){
+
+        throw "The entered field values should not be empty or contain white spaces";
+    }
+
+    if(!roomType=="1bhk" || !roomType=="2bhk" || !roomType=="3bhk"){
+      throw "The room type needs to be 1BHK,2BHK,3BHK";
+    }
+    
+    if(!roomCategory=="private" || !roomCategory=="shared"){
+      throw "The room category needs to be either Private or Shared";
+    }
+
+    if(!gender=="male" || !gender=="female" || !gender=="any"){
+      throw "The gender needs to be either Male,Female or Any";
+    }
+
+    let rentCheck=parseInt(rent);
+
+    if(typeof rentCheck!="number"){
+      throw "Enter numerical values for the rent field";
+    }
+
+    let statesList=['Alabama','Alaska','Arizona','Arkansas','California','Colorado','Connecticut','Delaware','Florida','Georgia','Hawaii','Idaho','Illinois','Indiana','Iowa','Kansas','Kentucky','Louisiana','Maine','Maryland','Massachusetts','Michigan','Minnesota','Mississippi','Missouri','Montana','Nebraska','Nevada','New Hampshire','New Jersey','New Mexico','New York','North Carolina','North Dakota','Ohio','Oklahoma','Oregon','Pennsylvania','Rhode Island','South Carolina','South Dakota','Tennessee','Texas','Utah','Vermont','Virginia','Washington','West Virginia','Wisconsin','Wyoming'];
+
+    if(!statesList.includes(state)){
+      throw "Do not enter the state out of the states list";
+    }
+
+  } catch (error) {
+    res.status(400).render("houses/error",{message:error});
+  }
+  
+  let accommodationInfo={
+    roomType:roomType,
+    roomCategory:roomCategory,
+    gender:gender,
+    city:city,
+    state:state,
+    rent:rent,
+    description:description,
+    imageUrls:imageUrls,
+    imagePublicIds:imagePublicIds
+  }
+
+
+  try {
+    const newhouse = await housesData.create(accommodationInfo,emailAddress);
     console.log("newhouse", newhouse);
     res.redirect('/houses/' + newhouse._id);
   } catch (e) {

@@ -70,6 +70,7 @@ export const createUser = async (
     emailAddress: emailAddress,
     role: 'user',
     password: password,
+    accommodations:[],
   };
   // let hashedPassword;
   const hash = await bcrypt.hash(password, 10);
