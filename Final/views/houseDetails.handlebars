@@ -47,3 +47,28 @@
         {{this.comment}}
     </div>
 {{/each}}
+
+<section>
+    <h1>Reviews</h1>
+    {{#each reviewsList}}
+      <div>
+        <p>Rating: {{this.rating}}</p>
+        <p>Review: {{this.reviewText}}</p>
+        <p>Date: {{this.date}}</p>
+        <form action="/reviews/{{this._id}}/delete" method="post" style="display:inline;">
+            <button type="submit">Delete</button>
+        </form>
+      </div>
+    {{/each}}
+
+    <h2>Add your review</h2>
+    <form class="center padding" action="/reviews/{{house._id}}" method="POST">
+    <div>
+        <label for="rating">Rating (1-5)</label>
+        <input type="number" name="rating" step="0.1" min="1" max="5" required>
+        <label for="reviewText">Review:</label>
+        <textarea name="reviewText" id="reviewText" required></textarea>
+        <button type="submit">Add a Review</button>
+    </div>
+    </form>
+</section>
