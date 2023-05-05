@@ -174,10 +174,10 @@ router
     try {
       req.params.id = validation.checkId(req.params.id, 'Id URL Param');
       const house = await housesData.getById(req.params.id);
-      const reviewsList = await reviewsData.getReviewsByHouseId(req.params.id);
-      return res.status(200).res.render('houseDetails', { house, reviewsList });
+      //const reviewsList = await reviewsData.getReviewsByHouseId(req.params.id);
+      return res.status(200).render('houseDetails', { house});
     } catch (e) {
-      res.status(404).json(e);
+      res.status(404).render('houses/error', {message: e});
     }
   })
 
@@ -186,16 +186,16 @@ router
     req.params.id = validation.checkId(req.params.id, 'Id URL Param');
     if (req.params.id.trim() == "") throw 'Comment cannot be empty';
   } catch(e) {
-    res.status(404).render('error', {title: 'error', message: e})
+    res.status(404).render('houses/error', {title: 'error', message: e})
   }
 
   try {
     const newComment = await commentsData.createComment(req.session.user, req.params.id, req.body.commentInput);
     if (newComment != true) throw 'new comment cannot be addded'
     const house = await housesData.getById(req.params.id);
-    return res.render('houseDetails', { house, reviewsList });
+    return res.render('houseDetails', { house});
   } catch (e) {
-    res.status(400).render('error', {title: 'error', message: e});
+    res.status(400).render('houses/error', {title: 'error', message: e});
   }
 });
 
