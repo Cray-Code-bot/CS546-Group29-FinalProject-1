@@ -1,69 +1,63 @@
-import { reviews as reviewsCollectionImport } from '../config/mongoCollections.js';
-import { houses as housesCollectionImport } from '../config/mongoCollections.js';
+import { houses as houseCollection } from '../config/mongoCollections.js';
 import { ObjectId } from 'mongodb';
+import validation from '../helpers.js';
 
-const create = async (reviewData) => {
-  const reviewsCollection = await reviewsCollectionImport();
-  const newReview = {
-    houseId: reviewData.houseId,
-    user: reviewData.user,
+const housesCollection = await houseCollection();
+
+const createReview = async (
+  poster,
+  accommodationId,
+  reviewData
+) => {
+  const now = new Date();
+  const reviewDate = now.toLocaleString('en-US')
+
+  let newReview = {
+    _id: new ObjectId(),
+    firstName: poster.firstName,
+    lastName: poster.lastName,
+    emailAddress: poster.emailAddress,
     rating: reviewData.rating,
-    reviewText: reviewData.reviewText,
-    date: new Date().toUTCString(),
+    review: reviewData.review,
+    reviewDate: reviewDate
   };
 
-  const insertInfo = await reviewsCollection.insertOne(newReview);
-  if (insertInfo.insertedCount === 0) throw 'Could not add review';
+  const updateReview = await housesCollection.updateOne(
+    { _id: new ObjectId(accommodationId) },
+    { $push: { reviews: newReview } },
+    { returnDocument: 'after' });
 
-  const newId = insertInfo.insertedId;
-
-  const review = await getById(newId.toString());
-  return JSON.parse(JSON.stringify(review));
-};
-
-const getById = async (id) => {
-  if (!id) throw 'You must provide an id to search for';
-  const reviewsCollection = await reviewsCollectionImport();
-  const objId = ObjectId.createFromHexString(id);
-  const review = await reviewsCollection.findOne({ _id: objId });
-  if (review === null) throw 'No review with that id';
-  return JSON.parse(JSON.stringify(review));
-};
-
-const getAll = async () => {
-  const reviewsCollection = await reviewsCollectionImport();
-  const reviews = await reviewsCollection.find({}).toArray();
-  return reviews;
-};
-
-const remove = async (id) => {
-  if (!id) throw 'You must provide an id to search for';
-
-  const reviewsCollection = await reviewsCollectionImport();
-  const reviewToRemove = await reviewsCollection.findOne({ _id: new ObjectId(id) });
-
-  if (!reviewToRemove) {
-    throw `No review with the id ${id} exists`;
+  if (updateReview.modifiedCount === 0) {
+    throw `could not add review to accommodation ${accommodationId}`;
   }
+  return true;
+};
 
-  const deletionInfo = await reviewsCollection.deleteOne({ _id: new ObjectId(id) });
-  if (deletionInfo.deletedCount === 0) {
-    throw `Could not delete review with id of ${id}`;
+const deleteReview = async (accommodationId, reviewId) => {
+  if (!accommodationId || !reviewId) throw 'You must provide both accommodationId and reviewId';
+
+  const updateResult = await housesCollection.updateOne(
+    { _id: new ObjectId(accommodationId) },
+    { $pull: { reviews: { _id: new ObjectId(reviewId) } } }
+  );
+
+  if (updateResult.modifiedCount === 0) {
+    throw `Could not delete review with id ${reviewId} from accommodation ${accommodationId}`;
   }
 
   return true;
 };
 
-const getReviewsByHouseId = async (houseId) => {
-  const reviewsCollection = await reviewsCollectionImport();
-  const reviews = await reviewsCollection.find({ houseId }).toArray();
-  return reviews;
+const getAll = async () => {
+  const reviewsCollection = await reviews();
+  return await reviewsCollection.find({}).toArray();
 };
 
-export {
-  create,
-  getById,
-  getAll,
-  remove,
-  getReviewsByHouseId
+const getReviewsByAccommodationId = async (accommodationId) => {
+  const house = await housesCollection.findOne({ _id: new ObjectId(accommodationId) });
+  if (!house) throw `House with id ${accommodationId} not found`;
+  return house.reviews;
 };
+
+
+export { createReview, deleteReview, getAll, getReviewsByAccommodationId };
