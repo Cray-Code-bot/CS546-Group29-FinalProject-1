@@ -22,6 +22,10 @@ NOTE: YOU WILL NEED TO CHANGE THE CODE BELOW AND UNCOMMENT IT TO HAVE THE COLLEC
 const getHousesCollection = getCollectionFn('houses');
 export const houses = getHousesCollection;
 
+//for review
+const getReviewsCollection = getCollectionFn('reviews');
+export const reviews = getReviewsCollection;
+
 //export const posts = getCollectionFn('posts');
 export const users=getCollectionFn('users');
 export const accommodations=getCollectionFn('accommodations');
