@@ -1,6 +1,7 @@
 import express from 'express';
 import * as housesData from '../data/houses.js';
 import * as commentsData from '../data/comments.js';
+import * as reviewsData from '../data/reviews.js';
 import xss from 'xss';
 import validation from '../helpers.js';
 import upload from "../utils/multer.js";
@@ -173,7 +174,8 @@ router
     try {
       req.params.id = validation.checkId(req.params.id, 'Id URL Param');
       const house = await housesData.getById(req.params.id);
-      return res.status(200).render("houseDetails", {title: 'Post Details', house: house});
+      const reviewsList = await reviewsData.getReviewsByHouseId(req.params.id);
+      return res.status(200).res.render('houseDetails', { house, reviewsList });
     } catch (e) {
       res.status(404).json(e);
     }
