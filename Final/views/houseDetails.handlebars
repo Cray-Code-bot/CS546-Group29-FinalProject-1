@@ -45,7 +45,8 @@
     <div>
         <label for="commentInput">Comments</label>
         <textarea name="commentInput" cols="75" rows="3" id="commentInput" ></textarea>
-        <button type="submit" id="submitButton" >Post</button>
+        <button type="submit" id="submitButton" onclick="validateComment()">Post</button>
+        <span style="color:red" id="errorComment" hidden></span> <br/>
     </div>
 </form>
 

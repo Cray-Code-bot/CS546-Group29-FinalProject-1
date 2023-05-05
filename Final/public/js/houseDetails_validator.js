@@ -19,3 +19,25 @@ function showSlides(n) {
   }
   slides[slideIndex-1].style.display = "block";
 }
+
+let preventEvent = true;
+function validateComment() {
+  let comment = document.getElementById("commentInput");
+  let errorComment = document.getElementById("errorComment");
+  if (comment.value.trim() == "") {
+    preventEvent = true;
+    errorComment.hidden = false;
+    errorComment.textContent = "Comment cannot be empty or only spaces";
+  } else {
+    errorComment.hidden = true;
+    preventEvent = false;
+  }
+}
+
+var form = document.querySelector('.comments-form');
+form.addEventListener('submit', function(event){
+    console.log(preventEvent);
+    if (preventEvent) {
+        event.preventDefault();
+    }
+})
