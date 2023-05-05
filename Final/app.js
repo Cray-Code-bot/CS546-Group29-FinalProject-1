@@ -43,30 +43,30 @@ app.set("view engine", "handlebars");
 app.use(
   session({
     name: "AuthCookie",
-    secret: "This is a secret.. shhh don't tell anyone",
+    secret: "That-group_which-shall_not-be-named",
     saveUninitialized: false,
     resave: false,
-    cookie: { maxAge: 60000 },
+    cookie: { maxAge: 6000000 },
   })
 );
 
+app.get('/', (req, res, next) => {
+  if (!req.session.user) {
+    res.redirect('/about');
+  } else {
+    res.redirect('/dashboard');
+  }
+});
 
 app.use("/register", (req, res, next) => {
-  console.log(req.session.id);
   if (req.session.user) {
-    if (req.session.user.role == "admin") {
-      res.redirect("/admin");
-    }
-    if (req.session.user.role == "user") {
-      res.redirect("/protected");
-    }
+    res.redirect("/dashboard");
   } else {
     next();
   }
 });
 
 app.use("/login", (req, res, next) => {
-  console.log(req.session.id);
   if (req.session.user) {
     res.redirect('/dashboard');
   } else {
@@ -75,7 +75,6 @@ app.use("/login", (req, res, next) => {
 });
 
 app.use("/dashboard", (req, res, next) => {
-  console.log(req.session.id);
   if (!req.session.user) {
     res.redirect('/login');
   } else {
@@ -83,30 +82,23 @@ app.use("/dashboard", (req, res, next) => {
   }
 });
 
-app.use("/protected", (req, res, next) => {
-  console.log(req.session.id);
-  if (req.session.user) {
+app.use("/houses", (req, res, next) => {
+  if (!req.session.user) {
+    res.redirect('/login');
+  } else {
     next();
-  } else {
-    res.redirect("/login");
   }
-});
+})
 
-app.use("/admin", (req, res, next) => {
-  console.log(req.session.id);
-  if (req.session.user) {
-    if (req.session.user.role == "admin") {
-      next();
-    } else {
-      res.status(403).redirect("/error", { user: req.session.user });
-    }
+app.use("/reviews", (req, res, next) => {
+  if (!req.session.user) {
+    res.redirect('/login');
   } else {
-    res.redirect("/login");
+    next();
   }
-});
+})
 
 app.use("/logout", (req, res, next) => {
-  console.log(req.session.id);
   if (req.session.user) {
     next();
   } else {
