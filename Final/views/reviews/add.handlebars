@@ -1,0 +1,11 @@
+<h2>Add a Review</h2>
+    <form action="/reviews/{{house.houseId}}/add" method="post" enctype="application/x-www-form-urlencoded">
+      <input type="hidden" name="houseId" value="{{house._id}}">
+      <label for="rating">Rating (1-5)</label>
+      <input type="number" name="rating" step="0.1" min="1" max="5" required>
+      <br>
+      <label for="reviewText">Review:</label>
+      <textarea name="reviewText" required></textarea>
+      <br>
+      <button type="submit">Submit Review</button>
+    </form>
