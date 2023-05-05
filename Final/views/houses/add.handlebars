@@ -1,5 +1,12 @@
+<div class="user-nav">
+    <a class="all_accomodations" href="/dashboard">All Accomodations</a>
+    <a class="create_post" href="/houses/add">Create Post</a>
+    <a class="user_profile" href="/userProfile">User Profile</a>
+    <a class="logout" href="/logout">Logout</a>
+</div>
+
 <h2>Add New House</h2>
-<form action="/houses/post" method="post" enctype="multipart/form-data">
+<form action="/houses/post" method="post" enctype="multipart/form-data" class="housepost-form">
 
   <label for="roomType">Room type:</label>
   <select name="roomType" id="roomType">
@@ -16,11 +23,11 @@
   </select>
   <br />
   <br />
-  <label for="gender">Gender:</label>
+  <label for="gender">Gender Preference:</label>
   <select name="gender" id="gender">
+    <option value="Any">Any</option>
     <option value="Male">Male</option>
     <option value="Female">Female</option>
-    <option value="Any">Any</option>
   </select>
   <br />
   <br />
@@ -100,7 +107,7 @@
   />
   <br />
   <br />
-  <input type="submit" value="post" />
+  <input type="submit" value="post" ">
 
 </form>
 {{#if errorcode}}

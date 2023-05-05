@@ -9,13 +9,17 @@ const createComment = async (
     accomodationId,
     comment
   ) => {
+    if (comment.trim() == '') throw 'comment cannot be empty';
+    comment = comment.trim();
+    const now = new Date();
+    const commentDate = now.toLocaleString('en-US')
+
     let newComment = {
         firstName: poster.firstName,
         lastName: poster.lastName,
         emailAddress: poster.emailAddress,
-        accomodationId: accomodationId,
         comment: comment,
-        commentDate: new Date().toUTCString()
+        commentDate: commentDate
     };
 
     const updateComment = await housesCollection.updateOne(

@@ -76,11 +76,11 @@
             </select>
         </div>
         <div class="search-group">
-            <label for="genderPreference">Gender Preference</label>
-            <select name="genderPreference" id="genderPreference" class="search-input">
-                <option value="anyGender">Any</option>
+            <label for="gender">Gender</label>
+            <select name="gender" id="gender" class="search-input">
                 <option value="male">Male</option>
                 <option value="female">Female</option>
+                <option value="anyGender">Any</option>
             </select>
         </div>
         <div class="search-group">
@@ -102,11 +102,10 @@
         <div class="sort-group">
             <label for="roomType">Room Type</label>
             <select name="roomType" id="roomType" class="search-input">
+                <option value="all_type">All</option>
                 <option value="1bhk">1 BHK</option>
                 <option value="2bhk">2 BHK</option>
                 <option value="3bhk">3 BHK</option>
-                <option value="4bhk">4 BHK</option>
-                <option value="5bhk">5 BHK+</option>
             </select>
         </div>
         <div class="sort-group">
@@ -125,27 +124,16 @@
     {{#each houses}}
         <div class="col-md-6 mb-4">
             <h2>
-                <a href="/houses/{{_id}}">{{type}} {{category}}</a>
+                <a href="/houses/{{_id}}">{{roomType}} {{roomCategory}} in {{city}}, {{state}} for ${{rent}}</a>
             </h2>
-            <img src ="{{#if images.[0].url}}{{images.[0].url}}{{else}}../public/images/No_Image_Available.jpg {{/if}}">
-            <div class="carousel-inner">
-                {{#each images}}
-                    <div class="carousel-item {{#unless @index}}active{{/unless}}">
-                        <img class="d-block w-100" 
-                        src="{{#if this.url}}{{this.url}}{{else}}../public/images/No_Image_Available.jpg{{/if}}" 
-                        alt="{{#if ../name}}{{../name}}{{else}}N/A{{/if}}"
-                        style="width: 100%;">
-                    </div>
-                {{/each}}
-            </div>
+            <img src ="{{#if imageUrls.[0]}}{{imageUrls.[0]}}{{else}}../public/images/No_Image_Available.jpg {{/if}}">
             <br>
             <address>Address: {{#if address.line1}}{{address.line1}}{{else}}N/A{{/if}}, 
+                {{#if address.line2}}{{address.line2}}{{/if}},
                 {{#if city}}{{city}}{{else}}N/A{{/if}},
                 {{#if state}}{{state}}{{else}}N/A{{/if}}
-                    {{#if zip}}{{zip}}{{else}}N/A{{/if}}
+                {{#if zip}}{{zip}}{{else}}N/A{{/if}}
             </address>
-            <p>Rent: {{rent}}</p>
-            <p>Description: {{description}}</p>
         </div>
     {{/each}}
     </div>

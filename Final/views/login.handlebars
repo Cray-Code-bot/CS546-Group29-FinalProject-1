@@ -1,17 +1,17 @@
 <form method="POST" class="login-form">
     <div class="form-email">
         <label for="emailAddressInput">Email Address:</label>
-        <input type="email" name="emailAddressInput" class="login-form-email" id="emailAddressInput" oninput=checkCredentials()>
+        <input type="email" name="emailAddressInput" class="login-form-email" id="emailAddressInput">
     </div>
-    <p class="error-email" hidden></p>
+    <span style="color:red" id="errorEmail" hidden></span>
     <div class="form-password">
         <label for="passwordInput">Enter Password:</label>
-        <input type="password" name="passwordInput" class="login-form-password" id="passwordInput" oninput=checkCredentials()>
+        <input type="password" name="passwordInput" class="login-form-password" id="passwordInput">
     </div>
-    <p class="error-password" hidden></p>
-    <button type="submit" class="login-button" disabled>Login</button>
-    <p class="register-button"><a href="/register">Click here to register</a></p>
+    <span style="color:red" id="errorPassword" hidden></span> <br/>
     <p class="invalid-credentials"><span style="color:red">{{message}}</span></p>
+    <button type="submit" class="login-button" onclick=checkCredentials()>Login</button>
+    <p class="register-button"><a href="/register">Click here to register</a></p>
 </form>
 
 <script src="public/js/login_validator.js"></script>
