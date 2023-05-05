@@ -193,7 +193,7 @@ router
     const newComment = await commentsData.createComment(req.session.user, req.params.id, req.body.commentInput);
     if (newComment != true) throw 'new comment cannot be addded'
     const house = await housesData.getById(req.params.id);
-    return res.status(200).render("houseDetails", {title: 'Post Details', house: house});
+    return res.render('houseDetails', { house, reviewsList });
   } catch (e) {
     res.status(400).render('error', {title: 'error', message: e});
   }
