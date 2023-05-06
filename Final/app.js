@@ -50,6 +50,11 @@ app.use(
   })
 );
 
+app.use((req, res, next) => {
+  res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
+  next();
+});
+
 app.get('/', (req, res, next) => {
   if (!req.session.user) {
     res.redirect('/about');
