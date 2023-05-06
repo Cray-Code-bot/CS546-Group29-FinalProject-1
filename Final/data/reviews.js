@@ -12,6 +12,7 @@ const createReview = async (
   const existingReview = await housesCollection.findOne(
     { _id: new ObjectId(accommodationId), 'reviews.emailAddress': poster }
   );
+  console.log('poster', poster);
 
   if (existingReview) {
     throw `User with email ${poster} has already reviewed accommodation ${accommodationId}`;
@@ -27,7 +28,7 @@ const createReview = async (
     review: reviewData.review,
     reviewDate: reviewDate
   };
-  console.log('newReview.emailAddress', newReview.emailAddress);
+  
   const updateReview = await housesCollection.updateOne(
     { _id: new ObjectId(accommodationId) },
     { $push: { reviews: newReview } },
@@ -53,8 +54,8 @@ const deleteReview = async (accommodationId, userEmail, reviewId) => {
   }
 
   console.log('userEmail', userEmail);
-  console.log('reviewToDelete.emailAddress', reviewToDelete.emailAddress);
-  if (reviewToDelete.emailAddress !== userEmail) {
+  console.log('reviewToDelete.emailAddress', reviewToDelete.emailAddress.emailAddress);
+  if (reviewToDelete.emailAddress.emailAddress !== userEmail) {
     throw `User with email ${userEmail} is not authorized to delete review ${reviewId}`;
   }
 
