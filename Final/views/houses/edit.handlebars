@@ -12,23 +12,24 @@
 <body>
   <form method="POST" action="/houses/{{house._id}}/edit">
     <input type="hidden" name="_id" value="{{house._id}}" />
-    <label for="type">Type:</label>
-  <select name="type" id="type" required>
+  <label for="roomType">Type:</label>
+  <select name="roomType" id="roomType" required>
     <option value="1BHK">1BHK</option>
     <option value="2BHK">2BHK</option>
     <option value="3BHK">3BHK</option>
-    <option value="4BHK">4BHK</option>
-    <option value="5BHK+">5BHK+</option>
   </select>
-  <br>
-  <label for="category">Category:</label>
-  <select name="category" id="category" required>
+  <span style="color:red" id="roomTypeError" hidden></span> <br/>
+  <br> 
+  <label for="roomCategory">Category:</label>
+  <select name="roomCategory" id="roomCategory" required>
     <option value="Private">Private</option>
     <option value="Shared">Shared</option>
   </select>
+  <span style="color:red" id="roomCategoryError" hidden></span> <br/>
   <br>
   <label for="city">City:</label>
   <input type="text" name="city" id="city" required />
+  <span style="color:red" id="cityError" hidden></span> <br/>
   <br>
   <label for="state">State:</label>
   <select name="state" id="state" required />
@@ -84,16 +85,18 @@
     <option value="WI">Wisconsin</option>
     <option value="WY">Wyoming</option>
   </select>
-  <br>
-  <label for="zip">Zip:</label>
-  <input type="text" name="zip" id="zip" required />
+  <span style="color:red" id="stateError" hidden></span> <br/>
   <br>
   <label for="rent">Rent:</label>
   <input type="number" name="rent" id="rent" required />
+  <span style="color:red" id="rentError" hidden></span> <br/>
   <br>
   <label for="description">Description:</label>
   <textarea name="description" id="description" required></textarea>
+  <span style="color:red" id="descriptionError" hidden></span> <br/>
   <br>
-    <button type="submit">Update house</button>
+  <button type="submit" onclick="house_validator()">Add House</button>
   </form>
 </body>
+
+<script src="../../public/js/housePost_validator.js"></script>

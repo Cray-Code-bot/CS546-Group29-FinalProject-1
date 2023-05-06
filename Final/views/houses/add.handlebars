@@ -14,6 +14,7 @@
     <option value="2BHK">2BHK</option>
     <option value="3BHK">3BHK</option>
   </select>
+  <span style="color:red" id="roomTypeError" hidden></span> <br/>
   <br />
   <br />
   <label for="roomCategory">Room Category:</label>
@@ -21,6 +22,7 @@
     <option value="Private">Private</option>
     <option value="Shared">Shared</option>
   </select>
+  <span style="color:red" id="roomCategoryError" hidden></span> <br/>
   <br />
   <br />
   <label for="gender">Gender Preference:</label>
@@ -29,10 +31,12 @@
     <option value="Male">Male</option>
     <option value="Female">Female</option>
   </select>
+  <span style="color:red" id="genderError" hidden></span> <br/>
   <br />
   <br />
   <label for="city">City:</label>
   <input type="text" name="city" id="city" />
+  <span style="color:red" id="cityError" hidden></span> <br/>
   <br />
   <br />
   <label for="state">State:</label>
@@ -87,14 +91,17 @@
     <option value="Wisconsin">Wisconsin</option>
     <option value="Wyoming">Wyoming</option>
   </select>
+  <span style="color:red" id="stateError" hidden></span> <br/>
   <br />
   <br />
   <label for="rent">Rent:</label>
   <input type="text" name="rent" id="rent" />
+  <span style="color:red" id="rentError" hidden></span> <br/>
   <br />
   <br />
   <label for="description">Description:</label>
   <textarea name="description" id="description"></textarea>
+  <span style="color:red" id="descriptionError" hidden></span> <br/>
   <br />
   <br />
   <label for="images">Upload Images:</label>
@@ -107,9 +114,11 @@
   />
   <br />
   <br />
-  <input type="submit" value="post" ">
+  <button type="submit" onclick="house_validator()">Add House</button>
 
 </form>
 {{#if errorcode}}
   <p class="error">{{message}}</p>
 {{/if}}
+
+<script src="../../public/js/housePost_validator.js"></script>

@@ -68,19 +68,21 @@
     </form>
 </article>
 
-<h2 class="house-post">Comments:</h2>
-<article class="comment-element">
-    {{#each house.comments}}
-        <div class="comments-div">
-            <dl class="comments-group">
-                {{this.firstName}} {{this.lastName}} {{this.commentDate}}
-            </dl>
-            <di class="comments-group">
-                {{this.comment}}
-            </di>
-        </div>
-    {{/each}}
-</article>
+{{#if house.comments}}
+    <h2 class="house-post">Comments:</h2>
+    <article class="comment-element">
+        {{#each house.comments}}
+            <div class="comments-div">
+                <dl class="comments-group">
+                    {{this.firstName}} {{this.lastName}} {{this.commentDate}}
+                </dl>
+                <di class="comments-group">
+                    {{this.comment}}
+                </di>
+            </div>
+        {{/each}}
+    </article>
+{{/if}}
 
 <h2 class="house-post">Reviews: </h2>
 <article class="review-element">
