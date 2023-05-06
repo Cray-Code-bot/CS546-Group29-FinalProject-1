@@ -10,12 +10,12 @@ const createReview = async (
   reviewData
 ) => {
   const existingReview = await housesCollection.findOne(
-    { _id: new ObjectId(accommodationId), 'reviews.emailAddress': poster }
+    { _id: new ObjectId(accommodationId), 'reviews.emailAddress': poster.emailAddress }
   );
   console.log('poster', poster);
 
   if (existingReview) {
-    throw `User with email ${poster} has already reviewed accommodation ${accommodationId}`;
+    throw `User with email ${poster.emailAddress} has already reviewed accommodation ${accommodationId}`;
   }
 
   const now = new Date();
@@ -23,7 +23,9 @@ const createReview = async (
 
   let newReview = {
     _id: new ObjectId(),
-    emailAddress: poster,
+    firstName: poster.firstName,
+    lastName: poster.lastName,
+    emailAddress: poster.emailAddress,
     rating: reviewData.rating,
     review: reviewData.review,
     reviewDate: reviewDate
@@ -54,8 +56,8 @@ const deleteReview = async (accommodationId, userEmail, reviewId) => {
   }
 
   console.log('userEmail', userEmail);
-  console.log('reviewToDelete.emailAddress', reviewToDelete.emailAddress.emailAddress);
-  if (reviewToDelete.emailAddress.emailAddress !== userEmail) {
+  console.log('reviewToDelete.emailAddress', reviewToDelete.emailAddress);
+  if (reviewToDelete.emailAddress !== userEmail) {
     throw `User with email ${userEmail} is not authorized to delete review ${reviewId}`;
   }
 
