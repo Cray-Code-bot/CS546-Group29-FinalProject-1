@@ -174,21 +174,6 @@ router.route("/dashboard")
     }
   })
 
-router.route("/protected").get(async (req, res) => {
-  //code here for GET
-  let today = new Date();
-  let currentTime =
-    today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
-  if (req.session.user) {
-    res.render("protected", {
-      firstName: req.session.user.firstName,
-      currentTime: currentTime,
-      role: req.session.user.role,
-    });
-  }
-});
-
-
 router.route("/error").get(async (req, res) => {
   //code here for GET
 });
