@@ -32,14 +32,13 @@ router.get('/:accommodationId', async (req, res) => {
 router.post('/:accommodationId', async (req, res) => {
     try {
         const accommodationId = req.params.accommodationId;
-        const userEmail = req.session.user.emailAddress;
         const reviewData = {
             rating: parseFloat(req.body.rating),
             review: req.body.review,
       };
         console.log("reviewData", reviewData);
   
-        const newReview = await reviewsData.createReview(userEmail, accommodationId, reviewData);
+        const newReview = await reviewsData.createReview(req.session.user, accommodationId, reviewData);
         console.log("newReview", newReview);
         res.status(201).redirect(`/houses/${accommodationId}`);
     } catch (e) {
