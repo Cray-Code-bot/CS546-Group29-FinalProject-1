@@ -1,0 +1,35 @@
+<div class="user-nav">
+    <a class="all_accomodations" href="/dashboard">All Accomodations</a>
+    <a class="create_post" href="/houses/add">Create Post</a>
+    <a class="user_profile" href="/userProfile">User Profile</a>
+    <a class="logout" href="/logout">Logout</a>
+</div>
+
+<h1>User Profile</h1>
+
+<article class="main-element">
+    <div class="user-details">
+        <p>Full Name: {{firstName}} {{lastName}}</p>
+        <p>Email: {{emailAddress}}</p>
+        <p>Your Accommodations:</p>
+    {{#each accommodations}}
+        <div class="house-details">
+            <h2>
+                <a href="/houses/{{_id}}">{{roomType}} {{roomCategory}} in {{city}}, {{state}} for ${{rent}}</a>
+            </h2>
+        </div>
+        <div class="image-container">
+            <img class="image" 
+            src ="{{#if imageUrls.[0]}}{{imageUrls.[0]}}{{else}}../public/images/No_Image_Available.jpg {{/if}}">
+        </div>
+        <div class="address-details">
+            <address>Address: {{#if address.line1}}{{address.line1}}{{else}}N/A{{/if}}, 
+                {{#if address.line2}}{{address.line2}}{{/if}},
+                {{#if city}}{{city}}{{else}}N/A{{/if}},
+                {{#if state}}{{state}}{{else}}N/A{{/if}}
+                {{#if zip}}{{zip}}{{else}}N/A{{/if}}
+            </address>
+        </div>
+    {{/each}}
+    </div>
+</article>
