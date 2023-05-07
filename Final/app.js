@@ -10,6 +10,7 @@ import { dirname } from "path";
 import exphbs from "express-handlebars";
 import session from "express-session";
 import path from 'path';
+import Handlebars from 'handlebars';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
@@ -38,7 +39,13 @@ app.use(rewriteUnsupportedBrowserMethods);
 
 app.engine("handlebars", exphbs.engine({ defaultLayout: "main" }));
 app.set("view engine", "handlebars");
-
+Handlebars.registerHelper('if_eq', function(a, b, opts) {
+  if (a === b) {
+      return opts.fn(this);
+  } else {
+      return opts.inverse(this);
+  }
+});
 
 app.use(
   session({
@@ -49,11 +56,6 @@ app.use(
     cookie: { maxAge: 6000000 },
   })
 );
-
-app.use((req, res, next) => {
-  res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
-  next();
-});
 
 app.get('/', (req, res, next) => {
   if (!req.session.user) {

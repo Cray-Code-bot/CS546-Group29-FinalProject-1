@@ -4,7 +4,6 @@ import { users } from '../config/mongoCollections.js';
 
 //create new house
 const create = async (accommodationData,emailAddress) => {
-
   let {roomType,roomCategory,gender,city,state,rent,description,imageUrls,imagePublicIds}=accommodationData;
   
   roomType=roomType.trim().toLowerCase();
@@ -59,8 +58,8 @@ const create = async (accommodationData,emailAddress) => {
     postDate: new Date().toLocaleString(),
     comments: [],
     reviews: [],
+    emailAddress: emailAddress
   };
-  
   const housesCollection = await houseCollection();
   
   const insertInfo = await housesCollection.insertOne(newAccomodation);
@@ -128,63 +127,68 @@ const remove = async (id) => {
   return true;
 };
 
-const update = async (id, updatedHouse) => {
+const update = async (id, updatedAccommodation) => {
   if (!id) throw "You must provide an id to search for";
-
-  const collection = await houseCollection();
-  const currentHouse = await collection.findOne({ _id: new ObjectId(id) });
-
-  if (!currentHouse) {
-    throw `No house with the id ${id} exists`;
+  const roomType = updatedAccommodation.roomType.trim().toLowerCase();
+  const roomCategory = updatedAccommodation.roomCategory.trim().toLowerCase();
+  const gender = updatedAccommodation.gender.trim().toLowerCase();
+  const city = updatedAccommodation.city.trim().toLowerCase();
+  const state = updatedAccommodation.state;
+  const rent = updatedAccommodation.rent;
+  const description = updatedAccommodation.description;
+  
+  if(!roomType || !roomCategory || !gender || !city || !state || !rent || !description){
+    throw "Enter all the fields";
   }
-
-  if (!updatedHouse.type || typeof updatedHouse.type !== 'string') {
-    throw "You must provide a valid type";
+      
+  if(roomType.trim().length==0 || roomCategory.trim().length==0 || gender.trim().length==0 || city.trim().length==0 || 
+    state.trim().length==0 || rent.trim().length==0 || description.trim().length==0){
+      throw "The entered field values should not be empty or contain white spaces";
   }
-
-  if (!updatedHouse.category || typeof updatedHouse.category !== 'string') {
-    throw "You must provide a valid category";
+  
+  if(roomType!="1bhk" && roomType!="2bhk" && roomType!="3bhk"){
+    throw "The room type needs to be 1BHK,2BHK,3BHK";
   }
-
-  if (!updatedHouse.city || typeof updatedHouse.city !== 'string') {
-    throw "You must provide a valid city";
+      
+  if(roomCategory!="private" && roomCategory!="shared"){
+    throw "The room category needs to be either Private or Shared";
   }
-
-  if (!updatedHouse.state || typeof updatedHouse.state !== 'string') {
-    throw "You must provide a valid state";
+  
+  if(gender!="male" && gender!="female" && gender!="any"){
+    throw "The gender needs to be either Male,Female or Any";
   }
-
-  if (!updatedHouse.zip || typeof updatedHouse.zip !== 'string' || updatedHouse.zip.length !== 5) {
-    throw "You must provide a valid zip code";
+  
+  let rentCheck=parseInt(rent);
+  
+  if(typeof rentCheck!="number"){
+    throw "Enter numerical values for the rent field";
   }
-
-  if (updatedHouse.rent === undefined || typeof updatedHouse.rent !== 'number') {
-    throw "You must provide a valid rent";
-  }
-
-  if (!updatedHouse.description || typeof updatedHouse.description !== 'string') {
-    throw "You must provide a valid description";
+  
+  let statesList=['Alabama','Alaska','Arizona','Arkansas','California','Colorado','Connecticut','Delaware','Florida','Georgia','Hawaii','Idaho','Illinois','Indiana','Iowa','Kansas','Kentucky','Louisiana','Maine','Maryland','Massachusetts','Michigan','Minnesota','Mississippi','Missouri','Montana','Nebraska','Nevada','New Hampshire','New Jersey','New Mexico','New York','North Carolina','North Dakota','Ohio','Oklahoma','Oregon','Pennsylvania','Rhode Island','South Carolina','South Dakota','Tennessee','Texas','Utah','Vermont','Virginia','Washington','West Virginia','Wisconsin','Wyoming'];
+  
+  if(!statesList.includes(state)){
+    throw "Do not enter the state out of the states list";
   }
 
   const updatedHouseData = {
     $set: {
-      type: updatedHouse.type,
-      category: updatedHouse.category,
-      city: updatedHouse.city,
-      state: updatedHouse.state,
-      zip: updatedHouse.zip,
-      rent: updatedHouse.rent,
-      description: updatedHouse.description,
-      postDate: new Date().toUTCString()
+      roomType: roomType,
+      roomCategory: roomCategory,
+      city: city,
+      state: state,
+      rent: rent,
+      description: description,
+      postDate: new Date().toLocaleString(),
     }
   };
 
-  const updateInfo = await collection.updateOne({ _id: new ObjectId(id) }, updatedHouseData);
+  const housesCollection = await houseCollection();
+  const updateInfo = await housesCollection.updateOne({ _id: new ObjectId(id) }, updatedHouseData);
   if (!updateInfo.matchedCount && !updateInfo.modifiedCount) {
     throw "Update failed";
   }
 
-  return await collection.findOne({ _id: new ObjectId(id) });
+  return await housesCollection.findOne({ _id: new ObjectId(id) });
 };
 
 export { 
