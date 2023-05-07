@@ -8,7 +8,8 @@
 
 <h2>Edit house</h2>
 
-  <form method="POST" action="/houses/{{house._id}}/edit">
+<body>
+  <form method="POST" action="/houses/{{house._id}}/edit" enctype="multipart/form-data">
     <input type="hidden" name="_id" value="{{house._id}}" />
   <label for="roomType">Room type:</label>
   <select name="roomType" id="roomType">
@@ -33,6 +34,10 @@
     <option value="Male">Male</option>
     <option value="Female">Female</option>
   </select>
+  <br>
+  <br>
+  <label for="address">Address:</label>
+  <textarea name="address" id="address"></textarea>
   <span style="color:red" id="genderError" hidden></span> <br/>
   <br />
   <br />
@@ -104,7 +109,18 @@
   <label for="description">Description:</label>
   <textarea name="description" id="description"></textarea>
   <span style="color:red" id="descriptionError" hidden></span> <br/>
-  <button type="submit" onclick="house_validator()">Add House</button>
+  <br />
+  <label for="images">Upload Images:</label>
+  <input
+    type="file"
+    id="images"
+    name="images"
+    multiple="multiple"
+    accept="image/jpeg,image/jpg"
+  />
+  <br>
+  <br>
+  <button type="submit" onclick="house_validator()">Update house details</button>
   </form>
 
 <script src="../../public/js/housePost_validator.js"></script>

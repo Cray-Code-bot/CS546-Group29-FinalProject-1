@@ -1,6 +1,7 @@
 import { houses as houseCollection } from '../config/mongoCollections.js';
 import { ObjectId } from 'mongodb';
 import { users } from '../config/mongoCollections.js';
+import cloudinary from '../utils/cloudinary.js';
 
 //create new house
 const create = async (accommodationData,emailAddress) => {
@@ -9,7 +10,7 @@ const create = async (accommodationData,emailAddress) => {
   roomType=roomType.trim().toLowerCase();
   roomCategory=roomCategory.trim().toLowerCase();
   gender=gender.trim().toLowerCase();
-  city=city.trim().toLowerCase();
+  city=city.trim().toUpperCase();
   state=state.trim();
   address=address.trim();
   description=description.trim();
@@ -117,7 +118,7 @@ const getById = async (id) => {
   if (!id) throw 'You must provide an id to search for';
   const housesCollection = await houseCollection();
   const objId =   ObjectId.createFromHexString(id);
-  const house = await housesCollection.findOne({ _id: objId });
+  const house = await housesCollection. findOne({ _id: objId });
   if (house === null) throw 'No house with that id';
   return JSON.parse(JSON.stringify(house));
 };
@@ -137,6 +138,12 @@ const remove = async (id) => {
   if (!houseToRemove) {
     throw `No house with the id ${id} exists`;
   }
+  const imagePublicIds=houseToRemove.imagePublicIds;
+
+  for (const publicId of imagePublicIds) {
+    
+    await cloudinary.uploader.destroy(publicId);
+  }
 
   const deletionInfo = await collection.deleteOne({ _id: new ObjectId(id) });
   if (deletionInfo.deletedCount === 0) {
@@ -154,8 +161,10 @@ const update = async (id, updatedAccommodation) => {
   const city = updatedAccommodation.city.trim().toLowerCase();
   const state = updatedAccommodation.state;
   const rent = updatedAccommodation.rent;
+  const address=updatedAccommodation.address;
   const description = updatedAccommodation.description;
-  
+  const imageUrls=updatedAccommodation.imageUrls;
+  const imagePublicIds=updatedAccommodation.imagePublicIds;
   if(!roomType || !roomCategory || !gender || !city || !state || !rent || !description){
     throw "Enter all the fields";
   }
@@ -183,10 +192,35 @@ const update = async (id, updatedAccommodation) => {
     throw "Enter numerical values for the rent field";
   }
   
+  if(rentCheck<=0){
+    throw "Dont't enter values less than or equal to zero"
+  }
+
   let statesList=['Alabama','Alaska','Arizona','Arkansas','California','Colorado','Connecticut','Delaware','Florida','Georgia','Hawaii','Idaho','Illinois','Indiana','Iowa','Kansas','Kentucky','Louisiana','Maine','Maryland','Massachusetts','Michigan','Minnesota','Mississippi','Missouri','Montana','Nebraska','Nevada','New Hampshire','New Jersey','New Mexico','New York','North Carolina','North Dakota','Ohio','Oklahoma','Oregon','Pennsylvania','Rhode Island','South Carolina','South Dakota','Tennessee','Texas','Utah','Vermont','Virginia','Washington','West Virginia','Wisconsin','Wyoming'];
   
   if(!statesList.includes(state)){
     throw "Do not enter the state out of the states list";
+  }
+
+  let descriptionWords=description.trim().split(/\s+/).length;
+    
+  let addressWords=address.trim().split(/\s+/).length;
+    
+  if(descriptionWords.length>500){
+    throw "Description should be less than 500 words";
+  }
+    
+  if(addressWords.length>30){
+      throw "Address should be less than 30 words"
+  }
+
+  const currentHouse=await getById(id);
+
+  let currentImagePublicIds=currentHouse.imagePublicIds;
+
+  for (const publicId of currentImagePublicIds) {
+    
+    await cloudinary.uploader.destroy(publicId);
   }
 
   const updatedHouseData = {
@@ -196,7 +230,10 @@ const update = async (id, updatedAccommodation) => {
       city: city,
       state: state,
       rent: rent,
+      address:address,
       description: description,
+      imageUrls:imageUrls,
+      imagePublicIds:imagePublicIds,
       postDate: new Date().toLocaleString(),
     }
   };
@@ -251,7 +288,7 @@ const searchAccommodation=async(
   roomType=roomType.trim().toLowerCase();
   roomCategory=roomCategory.trim().toLowerCase();
   gender=gender.trim().toLowerCase();
-  city=city.trim().toLowerCase();
+  city=city.trim().toUpperCase();
   state=state.trim();
 
   let statesList=['Alabama','Alaska','Arizona','Arkansas','California','Colorado','Connecticut','Delaware','Florida','Georgia','Hawaii','Idaho','Illinois','Indiana','Iowa','Kansas','Kentucky','Louisiana','Maine','Maryland','Massachusetts','Michigan','Minnesota','Mississippi','Missouri','Montana','Nebraska','Nevada','New Hampshire','New Jersey','New Mexico','New York','North Carolina','North Dakota','Ohio','Oklahoma','Oregon','Pennsylvania','Rhode Island','South Carolina','South Dakota','Tennessee','Texas','Utah','Vermont','Virginia','Washington','West Virginia','Wisconsin','Wyoming'];
@@ -278,10 +315,10 @@ const searchAccommodation=async(
 
   if(roomType=="all"){
     
-    resultSet=await housesCollection.find({roomCategory:roomCategory,gender:gender,state:state,city:city}).toArray();
+    resultSet=await housesCollection.find({roomCategory:roomCategory,gender:gender,state:state,city:{$regex:`^${city}`, $options: 'i'}}).toArray();
   }
   else{
-    resultSet=await housesCollection.find({roomType:roomType,roomCategory:roomCategory,gender:gender,state:state,city:city}).toArray();
+    resultSet=await housesCollection.find({roomType:roomType,roomCategory:roomCategory,gender:gender,state:state,city:{$regex:`^${city}`, $options: 'i'}}).toArray();
 
   }
 
