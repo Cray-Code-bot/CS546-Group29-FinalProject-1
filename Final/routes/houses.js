@@ -43,25 +43,6 @@ router.get("/add", async (req, res) => {
   }
 });
 
-function validateHouseInfo(houseInfo) {
-  const { type, category, city, state, gender, rent,description } = houseInfo;
-
-  if (!type || !category || !city || !state || !gender || !rent || !description) {
-    return { valid: false, message: "Please enter all the fields." };
-  }
-
-  if(type.trim().length == 0 || category.trim().length == 0 || city.trim().length == 0 || state.trim().length == 0) {
-    return { valid: false, message: "Please do not only enter space." };
-  }
-
-
-  if (typeof type !== 'string' || typeof category !== 'string' || typeof city !== 'string' || typeof state !== 'string') {
-    return { valid: false, message: "Invalid data type." };
-  }
-
-  return { valid: true };
-}
-
 router.post('/post',upload.array("images",10), async (req, res) => {
 
   if (!req.session.user) {
@@ -154,9 +135,9 @@ router.post('/post',upload.array("images",10), async (req, res) => {
     rent:rent,
     description:description,
     imageUrls:imageUrls,
-    imagePublicIds:imagePublicIds
+    imagePublicIds:imagePublicIds,
+    emailAddress:emailAddress
   }
-
 
   try {
     const newhouse = await housesData.create(accommodationInfo,emailAddress);
@@ -174,8 +155,7 @@ router
     try {
       req.params.id = validation.checkId(req.params.id, 'Id URL Param');
       const house = await housesData.getById(req.params.id);
-      //const reviewsList = await reviewsData.getReviewsByHouseId(req.params.id);
-      return res.status(200).render('houseDetails', { house});
+      return res.status(200).render('houseDetails', { house, currentUser: req.session.user });
     } catch (e) {
       res.status(404).render('houses/error', {message: e});
     }
@@ -205,11 +185,6 @@ router.post('/:id/delete', async (req, res) => {
   }
   try {
     const houseId = req.params.id;
-    const house = await housesData.getById(houseId);
-
-    if (req.session.user.emailAddress !== house.user) {
-      return res.status(400).render("houses/error", { message: "You are not the owner of this house"});
-    }
     
     console.log('Deleting house with id:', houseId);
     await housesData.remove(houseId);
@@ -234,33 +209,23 @@ router.get('/:id/edit', async (req, res) => {
 
 router.post('/:id/edit', async (req, res) => {
   try {
-    const houseId = req.params.id;
-    const house = await housesData.getById(houseId);
-
-    if (req.session.user.emailAddress !== house.user) {
-      return res.status(400).render("houses/error", { message: "You are not the owner of this house"});
-    }
     
-    let houseInfo = {
-      type: xss(req.body.type),
-      category: xss(req.body.category),
-      city: xss(req.body.city),
-      state: xss(req.body.state),
-      zip: xss(req.body.zip),
-      rent: parseFloat(xss(req.body.rent)), 
-      description: xss(req.body.description),
+    console.log('req.body.roomType',req.body.roomType);
+    let accommodationInfo = {
+      roomType:xss(req.body.roomType),
+      roomCategory:xss(req.body.roomCategory),
+      gender:xss(req.body.gender),
+      city:xss(req.body.city),
+      state:xss(req.body.state),
+      rent:xss(req.body.rent),
+      description:xss(req.body.description),
     };
 
     if (!req.session.user) {
       return res.status(400).render("houses/error", { message: "You need to login"});
     }
 
-    const validationResult = validateHouseInfo(houseInfo);
-    if (!validationResult.valid) {
-      return res.status(400).render("houses/error", { message: validationResult.message });
-    }
-
-    const updatedHouse = await housesData.update(req.params.id, houseInfo);
+    const updatedAccommodation = await housesData.update(req.params.id, accommodationInfo);
     res.redirect('/houses');
   } catch (e) {
     console.error('Error during house update:', e);
