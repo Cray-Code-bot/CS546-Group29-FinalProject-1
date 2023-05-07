@@ -3,6 +3,8 @@
 import { users } from "../config/mongoCollections.js";
 import { dbConnection, closeConnection } from "../config/mongoConnection.js";
 import bcrypt from "bcrypt";
+import validation from '../helpers.js';
+import { ObjectId } from 'mongodb';
 
 export const createUser = async (
   firstName,
@@ -139,3 +141,22 @@ export const checkUser = async (emailAddress, password) => {
     }
   }
 };
+
+export const getUserDetails = async (
+  accomodationId
+) => {
+  accomodationId = validation.checkId (accomodationId, "House ID");
+
+  const userCollection = await users();
+  const user = await userCollection.findOne({accommodations: accomodationId});
+  // if (user === null) throw 'user not found';
+  if (user) {
+    const userInfo = {
+      firstName: user.firstName,
+      lastName: user.lastName
+    };
+    return userInfo;
+  } else {
+    return null;
+  }
+}

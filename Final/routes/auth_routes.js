@@ -1,6 +1,6 @@
 //import express, express router as shown in lecture code
 import { Router } from "express";
-import { checkUser, createUser } from "../data/users.js";
+import { checkUser, createUser, getUserDetails } from "../data/users.js";
 import session from "express-session";
 import validation from '../helpers.js';
 import * as housesData from '../data/houses.js';
@@ -152,7 +152,20 @@ router.route("/dashboard")
   .get(async (req, res) => {
     if (req.session.user) {
       try {
+        let usersList = []
         const housesList = await housesData.getAll();
+        for (let i = 0; i < housesList.length; i++) {
+          const userInfo = await getUserDetails(housesList[i]._id.toString());
+          if (userInfo) {
+            housesList[i].firstName = userInfo.firstName;
+            housesList[i].lastName = userInfo.lastName;
+          }
+          const ratings = housesList[i].reviews.map(review => review.rating);
+          let avg_rating = "";
+          if (ratings.length > 0) {
+            housesList[i].avg_rating = (ratings.reduce((total, current) => total + current, 0)/ratings.length).toFixed(2);
+          }
+        }
         res.status(200).render('dashboard', {title: 'dashboard', houses: housesList});
       } catch (e) {
         res.status(400).render("error", { title: 'error', message: e });

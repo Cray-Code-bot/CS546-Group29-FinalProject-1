@@ -9,8 +9,11 @@
     <div class="house-details">
         <div class="house-title">
             <h2>{{house.roomType}} {{house.roomCategory}} in {{house.city}}, {{house.state}} for ${{house.rent}}</h2>
-            <h2 class="house-rating"><a href="/reviews/{{house._id}}">4/5</a></h2>
+            <h3 class="house-rating">{{#if rating}}{{rating}}/5{{/if}} <br> 
+                <a href="/reviews/{{house._id}}">{{#if sameUser}}View Review{{else}}Add Review{{/if}}</a>
+            </h3>
         </div>
+        <p>Posted By: {{userInfo.firstName}} {{userInfo.lastName}}</p>
         <p>PostDate: {{house.postDate}}</p>
     </div>
     <div class="image-carousel">
@@ -25,15 +28,13 @@
     </div>
     <br>
     <div class="address-details">
-        <address>Address: {{#if house.address.line1}}{{house.address.line1}}{{else}}N/A{{/if}}, 
+        <address>Address: {{#if house.address}}{{house.address}}{{else}}N/A{{/if}}, 
             {{#if house.city}}{{house.city}}{{else}}N/A{{/if}},
             {{#if house.state}}{{house.state}}{{else}}N/A{{/if}}
-            {{#if house.zip}}{{house.zip}}{{else}}N/A{{/if}}
         </address>
         <p>Description: {{house.description}}</p>
     </div>
-    {{#if currentUser}}
-    {{#if_eq currentUser.emailAddress house.emailAddress}}
+    {{#if sameUser}}
         <div class="edit-house">
             <form action="/houses/{{house._id}}/edit" method="get">
                 <button type="submit">Edit</button>
@@ -44,7 +45,6 @@
                 <button type="submit">Delete</button>
             </form>
         </div>
-    {{/if_eq}}
     {{/if}}
 </article>
 

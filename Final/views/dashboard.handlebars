@@ -43,7 +43,7 @@
     <option value="Nebraska">Nebraska</option>
     <option value="Nevada">Nevada</option>
     <option value="New Hampshire">New Hampshire</option>
-    <option value="New Jersey">New Jersey</option>
+    <option value="New Jersey" selected>New Jersey</option>
     <option value="New Mexico">New Mexico</option>
     <option value="New York">New York</option>
     <option value="North Carolina">North Carolina</option>
@@ -83,7 +83,7 @@
             </select>
         </div>
         <div class="search-group">
-            <label for="gender">Gender</label>
+            <label for="gender">Gender Preference:</label>
             <select name="gender" id="gender" class="search-input">
                 <option value="male">Male</option>
                 <option value="female">Female</option>
@@ -115,26 +115,30 @@
     </div>
 </form>
 
-<article class="main-element">
-    <div class="each-house">
+
+<div class="each-house">
     {{#each houses}}
-        <div class="house-details">
-            <h2>
-                <a href="/houses/{{_id}}">{{roomType}} {{roomCategory}} in {{city}}, {{state}} for ${{rent}}</a>
-            </h2>
+        <div class="dashboard-house">
+            <div class="house-title">
+                <h2>
+                    <a href="/houses/{{_id}}">{{roomType}} {{roomCategory}} in {{city}}, {{state}} for ${{rent}}</a>
+                </h2>
+                <h3 class="house-rating">Rating: {{#if avg_rating}}{{avg_rating}}/5{{else}}N/A{{/if}}</h3>
+            </div>
         </div>
+    <article class="main-element">
         <div class="image-container">
             <img class="image" 
             src ="{{#if imageUrls.[0]}}{{imageUrls.[0]}}{{else}}../public/images/No_Image_Available.jpg {{/if}}">
         </div>
         <div class="address-details">
-            <address>Address: {{#if address.line1}}{{address.line1}}{{else}}N/A{{/if}}, 
-                {{#if address.line2}}{{address.line2}}{{/if}},
+            <p>{{#if firstName}} Posted By: {{firstName}}{{/if}}{{#if lastName}} {{lastName}}{{/if}}</p>
+            <p>PostDate: {{postDate}}</p>
+            <address>Address: {{#if address}}{{address}}{{else}}N/A{{/if}},
                 {{#if city}}{{city}}{{else}}N/A{{/if}},
                 {{#if state}}{{state}}{{else}}N/A{{/if}}
-                {{#if zip}}{{zip}}{{else}}N/A{{/if}}
             </address>
         </div>
+    </article>
     {{/each}}
-    </div>
-</article>
+</div>
