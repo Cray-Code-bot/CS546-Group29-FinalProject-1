@@ -32,16 +32,20 @@
         </address>
         <p>Description: {{house.description}}</p>
     </div>
-    <div class="edit-house">
-        <form action="/houses/{{house._id}}/edit" method="get">
-            <button type="submit">Edit</button>
-        </form>
-    </div>
-    <div class="delete-house">
-        <form action="/houses/{{house._id}}/delete" method="post" style="display:inline;">
-            <button type="submit">Delete</button>
-        </form>
-    </div>
+    {{#if currentUser}}
+    {{#if_eq currentUser.emailAddress house.emailAddress}}
+        <div class="edit-house">
+            <form action="/houses/{{house._id}}/edit" method="get">
+                <button type="submit">Edit</button>
+            </form>
+        </div>
+        <div class="delete-house">
+            <form action="/houses/{{house._id}}/delete" method="post" style="display:inline;">
+                <button type="submit">Delete</button>
+            </form>
+        </div>
+    {{/if_eq}}
+    {{/if}}
 </article>
 
 <h2 class="house-post">Add your review</h2>
