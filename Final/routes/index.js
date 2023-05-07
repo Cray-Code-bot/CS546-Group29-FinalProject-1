@@ -9,7 +9,7 @@ const constructorMethod = (app) => {
   app.use('/reviews', reviewsRoutes);
 
   app.get('/about', (req, res) => {
-    res.sendFile(path.resolve('static/homepage.html'));
+    res.render("about", {title: "About Us", demopic: "../Final/static/demopic.jpg"});
   });
 
   app.use("/", auth_routes);
