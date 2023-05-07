@@ -30,37 +30,26 @@ router
 
 
     if (!firstNameInput) {
-      return res
-        .render("register")
-        .status(400)
-        .json({ error: "First name is missing" });
+      
+      return res.status(400).render("register", { message: "First name is missing"});
     }
 
     if (!lastNameInput) {
-      return res
-        .render("register")
-        .status(400)
-        .json({ error: "Last name is missing" });
+      return res.status(400).render("register",{message:"Last name is missing"});
     }
 
     if (!emailAddressInput) {
-      return res
-        .render("register")
-        .status(400)
-        .json({ error: "Email address is missing" });
+
+      return res.status(400).render("register",{message:"Email address is missing"});
     }
 
     if (!passwordInput) {
       
-      res.status(400);
-      res.json({error:"passwordInput is missing"})
+      return res.status(400).render("register",{message:"passwordInput is missing"});
     }
 
     if (!confirmPasswordInput) {
-      return res
-        .render("register")
-        .status(400)
-        .json({ error: "confirmPassword is missing" });
+      return res.status(400).render("register",{message:"confirmPassword is missing"});
     }
 
     try {
@@ -88,7 +77,7 @@ router
         throw "Error lastName length should be upto 25 characters";
       }
     } catch (e) {
-      return res.status(400).json({ error: e });
+      return res.status(400).render("error",{message:e});
     }
 
     try {
@@ -96,7 +85,7 @@ router
         throw "Error both the password and confirm password need to be same";
       }
     } catch (e) {
-      return res.status(400).json({ error: e });
+      return res.status(400).render("error",{message:e});
     }
     try {
       let regex =
@@ -112,7 +101,7 @@ router
         throw "Email address needs to be valid";
       }
     } catch (e) {
-      return res.status(400).json({ error: e });
+      return res.status(400).render("error",{message:e});;
     }
    
     let result = null;
@@ -124,12 +113,12 @@ router
         passwordInput,
       );
     } catch (e) {
-      return res.status(400).json({ error: e });
+      return res.status(400).render("error",{message:e});;
     }
     if (result.insertedUser == true) {
       res.redirect("login");
     } else {
-      res.status(500).json({ error: "Internal Server Error" });
+      return res.status(400).render("error",{message:e});;
     }
   });
 
