@@ -4,7 +4,7 @@ import { users } from '../config/mongoCollections.js';
 
 //create new house
 const create = async (accommodationData,emailAddress) => {
-  let {roomType,roomCategory,gender,city,state,rent,description,imageUrls,imagePublicIds}=accommodationData;
+  let {roomType,roomCategory,gender,city,state,rent,address,description,imageUrls,imagePublicIds}=accommodationData;
   
   roomType=roomType.trim().toLowerCase();
   roomCategory=roomCategory.trim().toLowerCase();
