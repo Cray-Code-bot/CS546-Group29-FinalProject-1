@@ -144,7 +144,7 @@ router.post('/post',upload.array("images",10), async (req, res) => {
   roomType=roomType.trim().toLowerCase();
   roomCategory=roomCategory.trim().toLowerCase();
   gender=gender.trim().toLowerCase();
-  city=city.trim();
+  city=city.trim().toUpperCase();
   state=state.trim();
   address=address.trim();
     if(!roomType || !roomCategory || !gender || !city || !state || !rent || !description || !address){
@@ -302,7 +302,7 @@ router.post('/:id/delete', async (req, res) => {
   }
 });
 
-router.get('/:id/edit', async (req, res) => {
+router.get('/:id/edit',async (req, res) => {
   if (!req.session.user) {
     return res.status(400).render("houses/error", { message: "You need to login"});
   }
@@ -314,24 +314,119 @@ router.get('/:id/edit', async (req, res) => {
   }
 });
 
-router.post('/:id/edit', async (req, res) => {
-  try {
-    
-    console.log('req.body.roomType',req.body.roomType);
-    let accommodationInfo = {
-      roomType:xss(req.body.roomType),
-      roomCategory:xss(req.body.roomCategory),
-      gender:xss(req.body.gender),
-      city:xss(req.body.city),
-      state:xss(req.body.state),
-      rent:xss(req.body.rent),
-      description:xss(req.body.description),
-    };
-
+router.post('/:id/edit',upload.array("images",10), async (req, res) => {
+   
     if (!req.session.user) {
       return res.status(400).render("houses/error", { message: "You need to login"});
     }
 
+    console.log('req.body.roomType',req.body.roomType);
+
+    let roomType=xss(req.body.roomType);
+    let roomCategory=xss(req.body.roomCategory);
+    let gender=xss(req.body.gender);
+    let city=xss(req.body.city);
+    let state=xss(req.body.state);
+    let rent=xss(req.body.rent);
+    let description=xss(req.body.description); 
+    let address=xss(req.body.address);
+
+    try {
+
+      roomType=roomType.trim().toLowerCase();
+      roomCategory=roomCategory.trim().toLowerCase();
+      gender=gender.trim().toLowerCase();
+      city=city.trim().toUpperCase();
+      state=state.trim();
+      address=address.trim();
+      
+        if(!roomType || !roomCategory || !gender || !city || !state || !rent || !description || !address){
+          throw "Enter all the fields";
+        }
+        
+        if(roomType.trim().length==0 || roomCategory.trim().length==0 || gender.trim().length==0 || city.trim().length==0 || 
+              state.trim().length==0 || rent.trim().length==0 || description.trim().length==0 || address.length==0){
+    
+            throw "The entered field values should not be empty or contain white spaces";
+        }
+    
+        if(!((roomType=="1bhk") || (roomType=="2bhk") || (roomType=="3bhk"))){
+          throw "The room type needs to be 1BHK,2BHK,3BHK";
+        }
+        
+        if(!((roomCategory=="private")|| (roomCategory=="shared"))){
+          throw "The room category needs to be either Private or Shared";
+        }
+    
+        if(!((gender=="male") || (gender=="female") || (gender=="any"))){
+          throw "The gender needs to be either Male,Female or Any";
+        }
+    
+        let rentCheck=parseInt(rent);
+    
+        if(typeof rentCheck!="number"){
+          throw "Enter numerical values for the rent field";
+        }
+    
+        if(rentCheck<=0){
+          throw "Dont't enter values less than or equal to zero"
+        }
+        let statesList=['Alabama','Alaska','Arizona','Arkansas','California','Colorado','Connecticut','Delaware','Florida','Georgia','Hawaii','Idaho','Illinois','Indiana','Iowa','Kansas','Kentucky','Louisiana','Maine','Maryland','Massachusetts','Michigan','Minnesota','Mississippi','Missouri','Montana','Nebraska','Nevada','New Hampshire','New Jersey','New Mexico','New York','North Carolina','North Dakota','Ohio','Oklahoma','Oregon','Pennsylvania','Rhode Island','South Carolina','South Dakota','Tennessee','Texas','Utah','Vermont','Virginia','Washington','West Virginia','Wisconsin','Wyoming'];
+    
+        if(!statesList.includes(state)){
+          throw "Do not enter the state out of the states list";
+        }
+    
+        let descriptionWords=description.trim().split(/\s+/).length;
+    
+        let addressWords=address.trim().split(/\s+/).length;
+    
+        if(descriptionWords.length>500){
+          throw "Description should be less than 500 words";
+        }
+    
+        if(addressWords.length>30){
+          throw "Address should be less than 30 words"
+        }
+        
+      } catch (error) {
+        return res.status(400).render("houses/error",{message:error});
+      }
+
+  let imageUrls=[];
+
+  let imagePublicIds=[];
+
+  try{
+    let imageFiles=req.files;
+
+    if(imageFiles.length==0){
+        return res.status(400).render("houses/error",{message:"No images attached!"});
+    }
+
+   for(const file of imageFiles){
+     const result=await cloudinary.uploader.upload(file.path);
+     imageUrls.push(result.secure_url);
+     imagePublicIds.push(result.public_id);
+   }
+
+  }
+  catch(err){
+    return res.status(400).render("houses/error",{message:err});
+  }
+    let accommodationInfo={
+    roomType:roomType,
+    roomCategory:roomCategory,
+    gender:gender,
+    address:address,
+    city:city,
+    state:state,
+    rent:rent,
+    description:description,
+    imageUrls:imageUrls,
+    imagePublicIds:imagePublicIds,
+  }
+  try{
     const updatedAccommodation = await housesData.update(req.params.id, accommodationInfo);
     res.redirect('/houses');
   } catch (e) {
