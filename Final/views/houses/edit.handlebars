@@ -5,11 +5,9 @@
     <a class="logout" href="/logout">Logout</a>
 </div>
 
-<head>
-  <h2>Edit house</h2>
-</head>
 
-<body>
+<h2>Edit house</h2>
+
   <form method="POST" action="/houses/{{house._id}}/edit">
     <input type="hidden" name="_id" value="{{house._id}}" />
   <label for="roomType">Room type:</label>
@@ -108,6 +106,5 @@
   <span style="color:red" id="descriptionError" hidden></span> <br/>
   <button type="submit" onclick="house_validator()">Add House</button>
   </form>
-</body>
 
 <script src="../../public/js/housePost_validator.js"></script>

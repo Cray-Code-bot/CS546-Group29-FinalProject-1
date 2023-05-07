@@ -1,3 +1,10 @@
+<div class="user-nav">
+    <a class="all_accomodations" href="/dashboard">All Accomodations</a>
+    <a class="create_post" href="/houses/add">Create Post</a>
+    <a class="user_profile" href="/userProfile">User Profile</a>
+    <a class="logout" href="/logout">Logout</a>
+</div>
+
 <h2>Add a Review</h2>
     <form action="/reviews/{{house.houseId}}/add" method="post" enctype="application/x-www-form-urlencoded">
       <input type="hidden" name="houseId" value="{{house._id}}">

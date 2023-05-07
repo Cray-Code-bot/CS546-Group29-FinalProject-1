@@ -1,14 +1,14 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Message</title>
-</head>
-<body>
-    <h1>{{message}}</h1>
-    <p>
-        <a href="/dashboard">Click here to view house list</a>
-    </p>
-</body>
-</html>
+<div class="user-nav">
+    <a class="all_accomodations" href="/dashboard">All Accomodations</a>
+    <a class="create_post" href="/houses/add">Create Post</a>
+    <a class="user_profile" href="/userProfile">User Profile</a>
+    <a class="logout" href="/logout">Logout</a>
+</div>
+
+<h1>{{message}}</h1>
+<p>
+    <a href="/dashboard">Click here to view house list</a>
+</p>
+<p>
+    <a href="/houses/{{accommodationId}}">Click here to go back to previous post</a>
+</p>

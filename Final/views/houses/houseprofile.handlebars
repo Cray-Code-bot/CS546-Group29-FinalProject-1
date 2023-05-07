@@ -1,4 +1,10 @@
-<body>
+<div class="user-nav">
+    <a class="all_accomodations" href="/dashboard">All Accomodations</a>
+    <a class="create_post" href="/houses/add">Create Post</a>
+    <a class="user_profile" href="/userProfile">User Profile</a>
+    <a class="logout" href="/logout">Logout</a>
+</div>
+
   <h1>{{house.type}} in {{house.city}}, {{house.state}}</h1>
   <p>Rent: {{house.rent}}</p>
   <p>Description: {{house.description}}</p>
@@ -9,4 +15,4 @@
   <form action="/houses/{{house._id}}/delete" method="post" style="display:inline;">
     <button type="submit">Delete</button>
  </form>
-</body>
+
