@@ -10,7 +10,7 @@
     <div class="search-form">
         <div class="search-group">
             <label for="cityTerm">City</label>
-            <input type="text" name="cityTerm" id = "cityTerm" placeholder: "City Name" class="search-input">
+            <input type="text" name="cityTerm" id = "cityTerm" class="search-input">
         </div>
         <div class="search-group">
             <label for="state">State</label>
@@ -91,12 +91,12 @@
             </select>
         </div>
         <div class="search-group">
-            <button type="search" class="search-button">Search</button>
+            <button type="submit" class="search-button">Search</button>
         </div>
     </div>
 </form>
 
-<form action="/houses/sort" method="POST" class="dashboard-sort-form">
+<form action="/houses/sort" method="GET" class="dashboard-sort-form">
     <div class="sort-form">
         <div class="sort-group">
             <h3>Filters:</h3>
@@ -110,7 +110,15 @@
             </select>
         </div>
         <div class="sort-group">
-            <button type="sort" class="sort-button">Filter</button>
+            <label for="minPrice">Min Price</label>
+            <input type="number" name="minPrice" id="minPrice">
+        </div>
+        <div class="sort-group">
+            <label for="maxPrice">Max Price</label>
+            <input type="number" name="maxPrice" id="maxPrice">
+        </div>
+        <div class="sort-group">
+            <button type="submit" class="sort-button">Apply</button>
         </div>
     </div>
 </form>
@@ -129,10 +137,11 @@
     <article class="main-element">
         <div class="image-container">
             <img class="image" 
-            src ="{{#if imageUrls.[0]}}{{imageUrls.[0]}}{{else}}../public/images/No_Image_Available.jpg {{/if}}">
+            src ="{{#if imageUrls.[0]}}{{imageUrls.[0]}}{{else}}../public/images/No_Image_Available.jpg {{/if}}"
+            alt="{{roomType}} {{roomCategory}} in {{city}}, {{state}}">
         </div>
         <div class="address-details">
-            <p>{{#if firstName}} Posted By: {{firstName}}{{/if}}{{#if lastName}} {{lastName}}{{/if}}</p>
+            <h3>{{#if firstName}} Posted By: {{firstName}}{{else}}N/A{{/if}}{{#if lastName}} {{lastName}}{{else}}N/A{{/if}}</h3>
             <p>PostDate: {{postDate}}</p>
             <address>Address: {{#if address}}{{address}}{{else}}N/A{{/if}},
                 {{#if city}}{{city}}{{else}}N/A{{/if}},

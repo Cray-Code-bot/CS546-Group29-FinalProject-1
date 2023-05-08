@@ -20,7 +20,7 @@
         {{#each house.imageUrls}}
             <div class="image-container">
                 <img class="image" src="{{this}}" 
-                alt="{{house.type}} {{house.category}} in {{house.city}}, {{house.state}} photos">
+                alt="{{house.type}} {{house.category}} in {{house.city}}, {{house.state}}">
             </div>
         {{/each}}
         <a class="prev" onclick="plusSlides(-1)">Previous</a>
@@ -48,28 +48,27 @@
     {{/if}}
 </article>
 
-<article class="comments-form">
+
     <form method="POST" class="comments-form">
         <div>
             <label for="commentInput">Comments</label>
             <textarea name="commentInput" cols="118" rows="5" id="commentInput" ></textarea>
             <button type="submit" id="submitButton" onclick="validateComment()">Post</button>
-            <span style="color:red" id="errorComment" hidden></span> <br/>
+            <span style="color:red" id="errorComment" hidden></span>
         </div>
     </form>
-</article>
 
 {{#if house.comments}}
     <h2 class="house-post">Comments:</h2>
     <article class="comment-element">
         {{#each house.comments}}
             <div class="comments-div">
-                <dl class="comments-group">
-                    {{this.firstName}} {{this.lastName}} {{this.commentDate}}
-                </dl>
-                <di class="comments-group">
-                    {{this.comment}}
-                </di>
+                <div class="comments-name">
+                    <h3>{{this.firstName}} {{this.lastName}} at {{this.commentDate}}</h3>
+                </div>
+                <div class="comment-details">
+                    <p>{{this.comment}}</p>
+                </div>
             </div>
         {{/each}}
     </article>
