@@ -7,24 +7,22 @@
 
 {{#if addReview}}
 <h2 class="house-post">Add your review</h2>
-<article class="review-form">
-    <form class="center padding" action="/reviews/{{house._id}}" method="POST">
+<form class="review-form" action="/reviews/{{house._id}}" method="POST">
     <div>
         <label for="rating">Rating (1-5)</label>
-        <input type="number" name="rating" step="0.1" min="1" max="5" required>
-        <label for="review">Review:</label>
+        <input type="number" name="rating" id="rating" step="0.1" min="1" max="5" required>
+        <label for="reviewText">Review:</label>
         <textarea name="review" id="reviewText" required></textarea>
         <button type="submit">Add a Review</button>
     </div>
-    </form>
-</article>
+</form>
+
 {{/if}}
 
 {{#if house.reviews}}
 <h2 class="house-post">Reviews: </h2>
-<article class="review-element">
-    {{#each house.reviews}}
-      <div>
+{{#each house.reviews}}
+      <div class="review-element">
         <p>Rating: {{this.rating}}</p>
         <p>Review: {{this.review}}</p>
         <p>Date: {{this.reviewDate}}</p>
@@ -34,6 +32,5 @@
         </form>
         {{/if}}
       </div>
-    {{/each}}
-</article>
+{{/each}}
 {{else}}No Review Yet{{/if}}

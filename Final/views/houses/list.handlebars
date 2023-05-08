@@ -1,22 +1,20 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Houses List</title>
-    <!-- Add any CSS or other resources here -->
-    {{#if successMessage}}
-        <p class="success">{{successMessage}}</p>
-    {{/if}}
-</head>
-<body>
-    <h1>Houses List</h1>
-            {{#each housesList}}
-            <div class="house">
-                <h2>{{this.type}} in {{this.city}}, {{this.state}}</h2>
-                <p>Rent: {{this.rent}}</p>
-                <a href="/houses/{{this._id}}">View House Profile</a>
-            </div>
-            {{/each}}
-</body>
-</html>
+<div class="user-nav">
+    <a class="all_accomodations" href="/dashboard">All Accomodations</a>
+    <a class="create_post" href="/houses/add">Create Post</a>
+    <a class="user_profile" href="/userProfile">User Profile</a>
+    <a class="logout" href="/logout">Logout</a>
+</div>
+
+<title>Houses List</title>
+{{#if successMessage}}
+    <p class="success">{{successMessage}}</p>
+{{/if}}
+
+<h1>Houses List</h1>
+{{#each housesList}}
+    <div class="house">
+        <h2>{{this.type}} in {{this.city}}, {{this.state}}</h2>
+        <p>Rent: {{this.rent}}</p>
+        <a href="/houses/{{this._id}}">View House Profile</a>
+    </div>
+{{/each}}

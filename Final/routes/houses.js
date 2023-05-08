@@ -22,6 +22,46 @@ router.get('/', async (req, res) => {
     }
 });
 
+router.get('/sort', async (req, res) => {
+  let sortBy = req.query.sortBy;
+  let minPrice = req.query.minPrice;
+  let maxPrice = req.query.maxPrice;
+  try {
+    let housesList = await housesData.getAll();
+    if (sortBy == "recentPost") {
+      housesList.sort((a, b) => new Date(b.postDate) - new Date(a.postDate));
+    } else if (sortBy == "PriceLH") {
+      housesList.sort((a, b) => a.rent - b.rent);
+    } else if (sortBy == "PriceHL") {
+      housesList.sort((a, b) => b.rent - a.rent);
+    }
+    if (minPrice && maxPrice) {
+      housesList = housesList.filter(housesList => housesList.rent >= parseFloat(minPrice) && housesList.rent <= parseFloat(maxPrice));
+    } else if (minPrice) {
+      housesList = housesList.filter(housesList => housesList.rent >= parseFloat(minPrice));
+    } else if (maxPrice) {
+      housesList = housesList.filter(housesList => housesList.rent <= parseFloat(maxPrice));
+    }
+    let usersList = [];
+    for (let i = 0; i < housesList.length; i++) {
+      const userInfo = await getUserDetails(housesList[i]._id.toString());
+      if (userInfo) {
+        housesList[i].firstName = userInfo.firstName;
+        housesList[i].lastName = userInfo.lastName;
+      }
+      const ratings = housesList[i].reviews.map(review => review.rating);
+      let avg_rating = "";
+      if (ratings.length > 0) {
+        housesList[i].avg_rating = (ratings.reduce((total, current) => total + current, 0)/ratings.length).toFixed(2);
+      }
+    }
+    res.status(200).render('dashboard', {title: 'dashboard', houses: housesList});
+  } catch (e) {
+    console.error(e);
+    res.status(400).render("error", { title: 'error', message: e });
+  }
+})
+
 router.get('/list', async (req, res) => {
   try {
     const housesList = await housesData.getAll();

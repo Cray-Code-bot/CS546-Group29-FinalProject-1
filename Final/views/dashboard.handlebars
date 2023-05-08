@@ -137,8 +137,7 @@
     <article class="main-element">
         <div class="image-container">
             <img class="image" 
-            src ="{{#if imageUrls.[0]}}{{imageUrls.[0]}}{{else}}../public/images/No_Image_Available.jpg {{/if}}"
-            alt="{{roomType}} {{roomCategory}} in {{city}}, {{state}}">
+            src ="{{#if imageUrls.[0]}}{{imageUrls.[0]}}{{else}}../public/images/No_Image_Available.jpg {{/if}}" alt="{{house.type}} {{house.category}} in {{house.city}}, {{house.state}}">
         </div>
         <div class="address-details">
             <h3>{{#if firstName}} Posted By: {{firstName}}{{else}}N/A{{/if}}{{#if lastName}} {{lastName}}{{else}}N/A{{/if}}</h3>

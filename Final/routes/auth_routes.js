@@ -180,7 +180,7 @@ router.route("/dashboard")
   .get(async (req, res) => {
     if (req.session.user) {
       try {
-        const housesList = await housesData.getAll();
+        const housesList = await housesData.getByUserId(req.session.user.emailAddress);
         res.status(200).render('userProfile', {title: "User Profile", firstName: req.session.user.firstName, lastName: req.session.user.lastName, emailAddress: req.session.user.emailAddress, accommodations: housesList});
       } catch (e) {
         res.status(400).render("error", { title: 'error', message: e });

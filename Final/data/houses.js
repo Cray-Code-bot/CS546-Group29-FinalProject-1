@@ -5,7 +5,7 @@ import cloudinary from '../utils/cloudinary.js';
 
 //create new house
 const create = async (accommodationData,emailAddress) => {
-  let {roomType,roomCategory,gender,city,state,rent,address,description,imageUrls,imagePublicIds}=accommodationData;
+  let {roomType,roomCategory,gender,city,state,rent,address,description,imageUrls,imagePublicIds, interest}=accommodationData;
   
   roomType=roomType.trim().toLowerCase();
   roomCategory=roomCategory.trim().toLowerCase();
@@ -26,7 +26,7 @@ const create = async (accommodationData,emailAddress) => {
   }
   
   if(!((roomType=="1bhk") ||(roomType=="2bhk") ||(roomType=="3bhk"))){
-        throw "The room type needs to be 1BHK,2BHK,3BHK";
+        throw "The room type needs to be 1BHK, 2BHK, 3BHK";
   }
       
   if(!((roomCategory=="private") || (roomCategory=="shared"))){
@@ -34,34 +34,34 @@ const create = async (accommodationData,emailAddress) => {
   }
   
   if(!((gender=="male") || (gender=="female") || (gender=="any"))){
-        throw "The gender needs to be either Male,Female or Any";
+        throw "The gender needs to be either Male, Female or Any";
   }
   
   let rentCheck=parseInt(rent);
   
   if(typeof rentCheck!="number"){
-        throw "Enter numerical values for the rent field";
+        throw "Enter numerical values only for the rent field.";
   }
   
   if(rentCheck<=0){
-    throw "Dont't enter values less than or equal to zero"
+    throw "Values must be greater than zero."
   }
 
   let statesList=['Alabama','Alaska','Arizona','Arkansas','California','Colorado','Connecticut','Delaware','Florida','Georgia','Hawaii','Idaho','Illinois','Indiana','Iowa','Kansas','Kentucky','Louisiana','Maine','Maryland','Massachusetts','Michigan','Minnesota','Mississippi','Missouri','Montana','Nebraska','Nevada','New Hampshire','New Jersey','New Mexico','New York','North Carolina','North Dakota','Ohio','Oklahoma','Oregon','Pennsylvania','Rhode Island','South Carolina','South Dakota','Tennessee','Texas','Utah','Vermont','Virginia','Washington','West Virginia','Wisconsin','Wyoming'];
   
   if(!statesList.includes(state)){
-        throw "Do not enter the state out of the states list";
+        throw "Do not enter the state out of the states list.";
   }
   let descriptionWords=description.trim().split(/\s+/).length;
 
     let addressWords=address.trim().split(/\s+/).length;
 
     if(descriptionWords.length>500){
-      throw "Description should be less than 500 words";
+      throw "Description should be less than 500 words.";
     }
 
     if(addressWords.length>30){
-      throw "Address should be less than 30 words"
+      throw "Address should be less than 30 words."
     }
   
   const newAccomodation = {
@@ -78,7 +78,8 @@ const create = async (accommodationData,emailAddress) => {
     postDate: new Date().toLocaleString(),
     comments: [],
     reviews: [],
-    emailAddress: emailAddress
+    emailAddress: emailAddress,
+    interest: []
   };
   const housesCollection = await houseCollection();
   
@@ -113,6 +114,11 @@ const addPostToAccount=async(accommodationId,email)=>{
 
 }
 
+const getByUserId = async (email) => {
+  const housesCollection = await houseCollection();
+  const houses = await housesCollection.find({emailAddress:email}).toArray();
+  return houses;
+};
 
 const getById = async (id) => {
   if (!id) throw 'You must provide an id to search for';
@@ -334,6 +340,7 @@ const searchAccommodation=async(
 export { 
   create, 
   getById, 
+  getByUserId,
   getAll, 
   remove,
   update,
