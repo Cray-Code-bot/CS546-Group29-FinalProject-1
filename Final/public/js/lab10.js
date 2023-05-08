@@ -27,7 +27,23 @@ if (registrationForm) {
 
     if (firstName.trim().length == 0) {
       let errorDesc = document.createElement("p");
-      errorDesc.innerText = "Error firstname should not contain empty spaces";
+      errorDesc.innerText = "Error first name should not contain empty spaces";
+      regErrorDiv.append(errorDesc);
+    }
+
+    let firstNameRegex=/^[a-zA-Z]+$/;
+
+    if(!firstNameRegex.test(firstName)){
+      let errorDesc = document.createElement("p");
+      errorDesc.innerText="Error first name  should not contain numbers in it";
+      regErrorDiv.append(errorDesc);
+    }
+
+    let lastNameRegex=/^[a-zA-Z]+$/;
+
+    if(!lastNameRegex.test(lastName)){
+      let errorDesc = document.createElement("p");
+      errorDesc.innerText="Error last name should not contain numbers in it";
       regErrorDiv.append(errorDesc);
     }
 

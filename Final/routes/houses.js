@@ -117,7 +117,7 @@ router.get("/add", async (req, res) => {
     return res.status(400).render("houses/error", { message: "You need to login"});
   }
   try {
-    res.render("houses/add");
+    res.render("houses/add",{title:"Add New House"});
   } catch (e) {
     res.status(400).render("houses/error", { error: e });
   }
