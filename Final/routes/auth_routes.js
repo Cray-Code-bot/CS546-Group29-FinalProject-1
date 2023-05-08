@@ -16,7 +16,7 @@ router
   .route("/register")
   .get(async (req, res) => {
     //code here for GET
-    res.render("register");
+    res.render("register",{title: 'Register'});
   })
   .post(async (req, res) => {
     //code here for POST
