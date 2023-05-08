@@ -1,6 +1,7 @@
 import express from 'express';
 import * as housesData from '../data/houses.js';
 import * as commentsData from '../data/comments.js';
+import * as interestData from '../data/interestCheck.js';
 import * as reviewsData from '../data/reviews.js';
 import xss from 'xss';
 import validation from '../helpers.js';
@@ -321,6 +322,34 @@ router
     if (newComment != true) throw 'new comment cannot be addded'
     const house = await housesData.getById(req.params.id);
     return res.render('houseDetails', { house});
+  } catch (e) {
+    res.status(400).render('houses/error', {title: 'error', message: e});
+  }
+});
+
+// Interest Check Code:
+router.post('/:id/interest',async (req, res) => {
+  try {
+    req.params.id = validation.checkId(req.params.id, 'Id URL Param');
+    if (req.params.id.trim() == "") throw 'Phone number cannot be empty!';
+    let interestInt=parseInt(req.params.id.trim());
+    if(typeof interestInt!="number")
+    {
+      throw "Enter numerical values only for the phone number. Do not include +, -, or ()!";
+    }
+    if(interestInt.length > 25 & interestInt.length < 7)
+    {
+      throw "A phone number can have a maximum of 25 digits and a minimum of 7 digits."
+    }
+  } catch(e) {
+    res.status(404).render('houses/error', {title: 'error', message: e})
+  }
+
+  try {
+    const newInterest = await interestData.createInterest(interestInput);
+    if (newInterest != true) throw 'A phone number cannot be added!'
+    const house = await housesData.getById(req.params.id);
+    return res.render('houseDetails', {house});
   } catch (e) {
     res.status(400).render('houses/error', {title: 'error', message: e});
   }

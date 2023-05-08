@@ -28,7 +28,7 @@ const rewriteUnsupportedBrowserMethods = (req, res, next) => {
   // let the next middleware run:
   next();
 };
-
+//app.use(express.static('../Final/static')); 
 app.use(morgan("dev"));
 app.use(bodyParser.json());
 

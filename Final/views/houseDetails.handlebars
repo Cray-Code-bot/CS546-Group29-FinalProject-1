@@ -49,14 +49,14 @@
 </article>
 
 
-    <form method="POST" class="comments-form">
-        <div>
-            <label for="commentInput">Comments</label>
-            <textarea name="commentInput" cols="118" rows="5" id="commentInput" ></textarea>
-            <button type="submit" id="submitButton" onclick="validateComment()">Post</button>
-            <span style="color:red" id="errorComment" hidden></span>
-        </div>
-    </form>
+<form method="POST" class="comments-form">
+    <div>
+        <label for="commentInput">Comments</label>
+        <textarea name="commentInput" cols="118" rows="5" id="commentInput" ></textarea>
+        <button type="submit" id="submitButton" onclick="validateComment()">Post</button>
+        <span style="color:red" id="errorComment" hidden></span>
+    </div>
+</form>
 
 {{#if house.comments}}
     <h2 class="house-post">Comments:</h2>
@@ -72,6 +72,32 @@
             </div>
         {{/each}}
     </article>
+{{/if}}
+
+{{#unless sameUser}}
+    <form method="POST" class="interest-form">
+        <div>
+            <label for="interestInput">Interested? Send your phone number: </label>
+            <textarea name="interestInput" cols="26" rows="1" id="interestInput" ></textarea>
+            <button type="submit" id="submitButton" onclick="validateInterest()">Send</button>
+            <span style="color:red" id="errorComment" hidden></span>
+        </div>
+    </form>
+{{/unless}}
+
+{{#if house.interest}}
+    {{#if sameUser}}
+        <h2 class="house-post">Interested Users:</h2>
+        <article class="comment-element">
+            {{#each house.interest}}
+                <div class="comments-div">
+                    <div class="comment-details">
+                        <p>{{this}}</p>
+                    </div>
+                </div>
+            {{/each}}
+        </article>
+    {{/if}}
 {{/if}}
 
 <script src="../public/js/houseDetails_validator.js"></script>

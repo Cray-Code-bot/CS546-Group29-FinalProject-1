@@ -313,6 +313,14 @@ footer a {
     justify-content: center;
 }
 
+.interest-form {
+  width: 100%;
+  margin: 20px 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
 .house-title {
     display: flex;
     justify-content: space-between;
