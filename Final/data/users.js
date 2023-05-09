@@ -85,9 +85,16 @@ export const createUser = async (
     throw "could not insert the record";
   }
 
-  await closeConnection();
+  const newUserObj = {
+    _id: insertedInfo.insertedId,
+    firstName: firstName,
+    lastName: lastName,
+    emailAddress: emailAddress,
+    role: 'user',
+    accommodations: [],
+  };
 
-  return { insertedUser: true };
+  return { user: newUserObj };
 };
 
 export const checkUser = async (emailAddress, password) => {
