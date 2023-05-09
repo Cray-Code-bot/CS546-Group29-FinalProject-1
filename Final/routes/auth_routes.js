@@ -112,13 +112,13 @@ router
         emailAddressInput,
         passwordInput,
       );
-    } catch (e) {
-      return res.status(400).render("error",{message:e});;
+    } catch (error) {
+      return res.status(400).render("error",{message:error });;
     }
-    if (result.insertedUser == true) {
+    if (result.user) {
       res.redirect("login");
     } else {
-      return res.status(400).render("error",{message:e});;
+      return res.status(400).render("error",{message:"User registration failed"});;
     }
   });
 
