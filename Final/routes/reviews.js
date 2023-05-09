@@ -31,14 +31,16 @@ router.post('/:accommodationId', async (req, res) => {
             rating: parseFloat(req.body.rating),
             review: req.body.review,
       };
+        console.log("reviewData", reviewData);
   
         const newReview = await reviewsData.createReview(req.session.user, accommodationId, reviewData);
         console.log("newReview", newReview);
-        res.status(201).redirect(`/reviews/${accommodationId}`);
+        res.status(201).json({ success: true, message: 'Review created successfully', newReview });
     } catch (e) {
-        res.status(400).render('reviews/message', {title: 'Review creation error',  message: 'Review not created', error: e });
-    }
-});
+        console.error('Error during review creation:', e);
+        res.status(400).json({ success: false, message: 'Review not created', error: e });
+    }  
+});   
   
   
 router.post('/:accommodationId/:reviewId/delete', async (req, res) => {
