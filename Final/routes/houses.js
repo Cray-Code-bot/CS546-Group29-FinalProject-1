@@ -15,11 +15,13 @@ const router = express.Router();
 
 router.get('/', async (req, res) => {
     try {
-        const housesList = await housesData.getAll();
-        //the handlnars
-        res.status(200).render("houses/list", { housesList, successMessage: req.query.successMessage  });
+        if (req.session.user) {
+          res.redirect('/dashboard')
+        } else{
+          res.redirect('/login')
+        }
     } catch (e) {
-        res.status(400).render("houses/error", { error: e });
+        res.status(400).render("houses/error", {title: 'error', error: e });
     }
 });
 
@@ -66,11 +68,10 @@ router.get('/sort', async (req, res) => {
 router.get('/list', async (req, res) => {
   try {
     const housesList = await housesData.getAll();
-    console.log("housesList", housesList);
-    res.render('houses/list', { housesList: housesList });
+    res.render('houses/list', {title: 'Houses List', housesList: housesList });
   } catch (e) {
     console.error(e);
-    res.status(500).render("houses/error", { message: "An error occurred while fetching the houses list.", error: e });
+    res.status(500).render("houses/error", {title: 'error', message: "An error occurred while fetching the houses list.", error: e });
   }
 });
 
@@ -141,33 +142,33 @@ let statesList=['Alabama','Alaska','Arizona','Arkansas','California','Colorado',
   }
   }
   catch(error){
-    return res.status(400).render("houses/error",{message:error});
+    return res.status(400).render("houses/error",{title: 'error', message:error});
   }
   try{
     const housesList=await housesData.searchAccommodation(roomType,roomCategory,gender,city,state);
-    res.render("houses/list",{housesList:housesList});
+    res.render("houses/list",{title:'Houses List', housesList:housesList});
   }
   catch(e){
-    res.status(500).render("houses/error", { message:e });
+    res.status(500).render("houses/error", {title: 'error', message:e });
   }
 })
 
 
 router.get("/add", async (req, res) => {
   if (!req.session.user) {
-    return res.status(400).render("houses/error", { message: "You need to login"});
+    res.redirect('/login');
   }
   try {
     res.render("houses/add",{title:"Add New House"});
   } catch (e) {
-    res.status(400).render("houses/error", { error: e });
+    res.status(400).render("houses/error", {title: 'error', error: e });
   }
 });
 
 router.post('/post',upload.array("images",10), async (req, res) => {
 
   if (!req.session.user) {
-    return res.status(400).render("houses/error", { message: "You need to login"});
+    res.redirect('/login');
   }
 
   let emailAddress=xss(req.session.user.emailAddress);
@@ -238,7 +239,7 @@ router.post('/post',upload.array("images",10), async (req, res) => {
     }
     
   } catch (error) {
-    return res.status(400).render("houses/error",{message:error});
+    return res.status(400).render("houses/error",{title: 'error', message:error});
   }
   let imageUrls=[];
 
@@ -248,7 +249,7 @@ router.post('/post',upload.array("images",10), async (req, res) => {
     let imageFiles=req.files;
 
     if(imageFiles.length==0){
-        return res.status(400).render("houses/error",{message:"No images attached!"});
+        return res.status(400).render("houses/error",{title: 'error', message:"No images attached!"});
     }
 
    for(const file of imageFiles){
@@ -259,7 +260,7 @@ router.post('/post',upload.array("images",10), async (req, res) => {
 
   }
   catch(err){
-    return res.status(400).render("houses/error",{message:err});
+    return res.status(400).render("houses/error",{title: 'error', message:err});
   }
 
   let accommodationInfo={
@@ -278,11 +279,10 @@ router.post('/post',upload.array("images",10), async (req, res) => {
 
   try {
     const newhouse = await housesData.create(accommodationInfo,emailAddress);
-    console.log("newhouse", newhouse);
     return res.redirect('/houses/' + newhouse._id);
   } catch (e) {
     console.error('Error during house creation:', e);
-    return res.status(400).render("houses/error", { message: "not created", error: e });
+    return res.status(400).render("houses/error", {title: 'error', message: "not created", error: e });
   }
 });
 
@@ -305,7 +305,7 @@ router
       return res.status(200).render('houseDetails', { title: 'houseDetails', house: house, rating: avg_rating, 
       userInfo: userInfo, sameUser: sameUser });
     } catch (e) {
-      res.status(404).render('houses/error', {message: e});
+      res.status(404).render('houses/error', {title: 'error', message: e});
     }
   })
 
@@ -321,7 +321,7 @@ router
     const newComment = await commentsData.createComment(req.session.user, req.params.id, req.body.commentInput);
     if (newComment != true) throw 'new comment cannot be addded'
     const house = await housesData.getById(req.params.id);
-    return res.render('houseDetails', { house});
+    return res.redirect(`houses/${req.params.id}`);
   } catch (e) {
     res.status(400).render('houses/error', {title: 'error', message: e});
   }
@@ -358,39 +358,37 @@ router.post('/:id/interest',async (req, res) => {
 
 router.post('/:id/delete', async (req, res) => {
   if (!req.session.user) {
-    return res.status(400).render("houses/error", { message: "You need to login"});
+    return res.status(400).render("houses/error", { title: 'error', message: "You need to login"});
   }
   try {
     const houseId = req.params.id;
     
     console.log('Deleting house with id:', houseId);
     await housesData.remove(houseId);
-    res.status(200).render('houses/message', { message: 'House deleted successfully' });
+    res.status(200).render('houses/message', {title: 'House Deleted', message: 'House deleted successfully' });
   } catch (e) {
     console.error('Error during house deletion:', e);
-    res.status(400).render('houses/error', { message: 'House not deleted', error: e });
+    res.status(400).render('houses/error', {title: 'error', message: 'House not deleted', error: e });
   }
 });
 
 router.get('/:id/edit',async (req, res) => {
   if (!req.session.user) {
-    return res.status(400).render("houses/error", { message: "You need to login"});
+    res.redirect('/login');
   }
   try {
     const house = await housesData.getById(req.params.id);
-    res.render('houses/edit', { house });
+    res.render('houses/edit', {title:'Edit House', house });
   } catch (e) {
-    res.status(404).render('houses/error', { message: 'House not found', error: e });
+    res.status(404).render('houses/error', {title: 'error', message: 'House not found', error: e });
   }
 });
 
 router.post('/:id/edit',upload.array("images",10), async (req, res) => {
    
     if (!req.session.user) {
-      return res.status(400).render("houses/error", { message: "You need to login"});
+      res.redirect('/login');
     }
-
-    console.log('req.body.roomType',req.body.roomType);
 
     let roomType=xss(req.body.roomType);
     let roomCategory=xss(req.body.roomCategory);
@@ -460,7 +458,7 @@ router.post('/:id/edit',upload.array("images",10), async (req, res) => {
         }
         
       } catch (error) {
-        return res.status(400).render("houses/error",{message:error});
+        return res.status(400).render("houses/error",{title: 'error', message:error});
       }
 
   let imageUrls=[];
@@ -471,7 +469,7 @@ router.post('/:id/edit',upload.array("images",10), async (req, res) => {
     let imageFiles=req.files;
 
     if(imageFiles.length==0){
-        return res.status(400).render("houses/error",{message:"No images attached!"});
+        return res.status(400).render("houses/error",{title: 'error', message:"No images attached!"});
     }
 
    for(const file of imageFiles){
@@ -482,7 +480,7 @@ router.post('/:id/edit',upload.array("images",10), async (req, res) => {
 
   }
   catch(err){
-    return res.status(400).render("houses/error",{message:err});
+    return res.status(400).render("houses/error",{title: 'error', message:err});
   }
     let accommodationInfo={
     roomType:roomType,
@@ -498,27 +496,11 @@ router.post('/:id/edit',upload.array("images",10), async (req, res) => {
   }
   try{
     const updatedAccommodation = await housesData.update(req.params.id, accommodationInfo);
-    res.redirect('/houses');
+    res.redirect(`/houses/${req.params.id}`);
   } catch (e) {
     console.error('Error during house update:', e);
-    res.status(500).render('houses/error', { message: `Update failed: ${e.message}`, error: e });
+    res.status(500).render('houses/error', {title: 'error', message: `Update failed: ${e.message}`, error: e });
   }
 });
-
-
-router.post('/houses', async (req, res) => {
-  if (!req.session.user) {
-    return res.status(400).render("houses/error", { message: "You need to login"});
-  }
-  try {
-    const newHouse = await housesData.create(req.body);
-    res.status(201).json(newHouse);
-  } catch (e) {
-    res.status(500).json({ error: e });
-  }
-});
-
-
-
 
 export default router;

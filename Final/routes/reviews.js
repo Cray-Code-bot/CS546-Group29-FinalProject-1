@@ -5,18 +5,6 @@ import xss from 'xss';
 
 const router = express.Router();
 
-router.get('/', async (req, res) => {
-    try {
-        const reviewsList = await reviewsData.getAll();
-        console.log("reviewsList", reviewsList);
-        res.status(200).json(reviewsList);
-    } catch (e) {
-        console.error('Error during fetching all reviews:', e);
-        res.status(500).json({ error: e });
-    }
-});
-  
-
 router.get('/:accommodationId', async (req, res) => {
     try {
       const accommodationId = req.params.accommodationId;
@@ -32,8 +20,7 @@ router.get('/:accommodationId', async (req, res) => {
       }
       res.status(200).render('houseReviews', { title: 'Reviews', house: house, addReview: addReview });
     } catch (e) {
-      console.error('Error during fetching reviews:', e);
-      res.status(400).render('reviews/message', { message: 'Reviews not found', error: e });
+      res.status(400).render('reviews/message', {title: 'Reviews not found', message: 'Reviews not found', error: e });
     }
 });
 
@@ -44,21 +31,19 @@ router.post('/:accommodationId', async (req, res) => {
             rating: parseFloat(req.body.rating),
             review: req.body.review,
       };
-        console.log("reviewData", reviewData);
   
         const newReview = await reviewsData.createReview(req.session.user, accommodationId, reviewData);
         console.log("newReview", newReview);
         res.status(201).redirect(`/reviews/${accommodationId}`);
     } catch (e) {
-        console.error('Error during review creation:', e);
-        res.status(400).render('reviews/message', { message: 'Review not created', error: e });
+        res.status(400).render('reviews/message', {title: 'Review creation error',  message: 'Review not created', error: e });
     }
 });
   
   
 router.post('/:accommodationId/:reviewId/delete', async (req, res) => {
     if (!req.session.user) {
-        return res.status(400).render("reviews/message", { message: "You need to login"});
+        res.redirect("/login");
     }
   
     const { accommodationId, reviewId } = req.params;
@@ -69,10 +54,10 @@ router.post('/:accommodationId/:reviewId/delete', async (req, res) => {
   
     try {
         await reviewsData.deleteReview(accommodationId, userEmail, reviewId);
-        res.status(200).render('reviews/message', { message: 'Review deleted successfully', accommodationId: accommodationId});
+        res.status(200).render('reviews/message', {title: 'Review Deleted', message: 'Review deleted successfully', accommodationId: accommodationId});
     } catch (e) {
         console.error('Error during review deletion:', e);
-        res.status(400).render('reviews/message', { message: 'Review not deleted', error: e });
+        res.status(400).render('reviews/message', {title: 'Review Deletion Error',  message: 'Review not deleted', error: e });
     }
 });
 
