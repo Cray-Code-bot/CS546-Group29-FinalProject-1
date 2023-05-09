@@ -26,9 +26,9 @@ router.get('/', async (req, res) => {
 });
 
 router.get('/sort', async (req, res) => {
-  let sortBy = req.query.sortBy;
-  let minPrice = req.query.minPrice;
-  let maxPrice = req.query.maxPrice;
+  let sortBy = xss(req.query.sortBy);
+  let minPrice = xss(req.query.minPrice);
+  let maxPrice = xss(req.query.maxPrice);
   try {
     let housesList = await housesData.getAll();
     if (sortBy == "recentPost") {
@@ -78,11 +78,11 @@ router.get('/list', async (req, res) => {
 
 router.get("/search",async(req,res)=>{
 
-  let city=req.query.cityTerm;
-  let state=req.query.state;
-  let roomCategory=req.query.roomCategory;
-  let roomType=req.query.roomType;
-  let gender=req.query.gender;
+  let city=xss(req.query.cityTerm);
+  let state=xss(req.query.state);
+  let roomCategory=xss(req.query.roomCategory);
+  let roomType=xss(req.query.roomType);
+  let gender=xss(req.query.gender);
 
   try{
 
@@ -317,8 +317,10 @@ router
     res.status(404).render('houses/error', {title: 'error', message: e})
   }
 
+  let commentInput = xss(req.body.commentInput);
+  if (commentInput.trim() == "" || typeof commentInput != "string") throw "Comment should be string or shouldn't be empty";
   try {
-    const newComment = await commentsData.createComment(req.session.user, req.params.id, req.body.commentInput);
+    const newComment = await commentsData.createComment(req.session.user, req.params.id, commentInput);
     if (newComment != true) throw 'new comment cannot be addded'
     const house = await housesData.getById(req.params.id);
     return res.redirect(`/houses/${req.params.id}`);
@@ -329,8 +331,9 @@ router
 
 // Interest Check Code:
 router.post('/:id/interest',async (req, res) => {
-  let interestInt=parseInt(req.body.interestInput);
-  let name = req.body.interestName;
+  let interestInt = xss(req.body.interestInput);
+  interestInt = parseInt(interestInt);
+  let name = xss(req.body.interestName);
   try {
     req.params.id = validation.checkId(req.params.id, 'Id URL Param');
     name = validation.checkName(name, 'Name')

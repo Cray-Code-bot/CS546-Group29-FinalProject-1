@@ -7,7 +7,7 @@ const router = express.Router();
 
 router.get('/:accommodationId', async (req, res) => {
     try {
-      const accommodationId = req.params.accommodationId;
+      const accommodationId = xss(req.params.accommodationId);
       const house = await housesData.getById(accommodationId);
       let addReview = true;
       if (house.reviews.map(review => review.emailAddress).includes(req.session.user.emailAddress) || house.emailAddress == req.session.user.emailAddress) {
@@ -26,10 +26,10 @@ router.get('/:accommodationId', async (req, res) => {
 
 router.post('/:accommodationId', async (req, res) => {
     try {
-        const accommodationId = req.params.accommodationId;
+        const accommodationId = xss(req.params.accommodationId);
         const reviewData = {
-            rating: parseFloat(req.body.rating),
-            review: req.body.review,
+            rating: xss(parseFloat(req.body.rating)),
+            review: xss(req.body.review),
       };
         console.log("reviewData", reviewData);
   
