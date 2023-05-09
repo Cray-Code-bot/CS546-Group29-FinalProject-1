@@ -7,7 +7,7 @@
 
 {{#if addReview}}
 <h2 class="house-post">Add your review</h2>
-<form class="review-form" action="/reviews/{{house._id}}" method="POST">
+<form id="ajax-review-form" class="review-form" action="/reviews/{{house._id}}" method="POST">
     <div>
         <label for="rating">Rating (1-5)</label>
         <input type="number" name="rating" id="rating" step="0.1" min="1" max="5" required>
@@ -34,3 +34,37 @@
       </div>
 {{/each}}
 {{else}}No Review Yet{{/if}}
+
+<script>
+  document.getElementById("ajax-review-form").addEventListener("submit", async (event) => {
+    event.preventDefault();
+
+    const accommodationId = '{{house._id}}';
+    const rating = document.getElementById("rating").value;
+    const reviewText = document.getElementById("reviewText").value;
+
+    const reviewData = {
+      rating,
+      review: reviewText,
+    };
+
+    try {
+      const response = await fetch(`/reviews/${accommodationId}`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(reviewData),
+      });
+
+      if (response.ok) {
+        alert("Review submitted successfully");
+        location.reload();
+      } else {
+        throw new Error(`Error submitting review: ${response.statusText}`);
+      }
+    } catch (error) {
+      alert(`Error: ${error.message}`);
+    }
+  });
+</script>
