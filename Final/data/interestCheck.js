@@ -5,20 +5,21 @@ const housesCollection = await houseCollection();
 
 const createInterest = async (
     accomodationId,
+    name,
     number
   ) => {
-    if (number.trim() == "") throw 'Phone number cannot be empty!';
-    let interestInt=parseInt(number.trim());
-    if(typeof interestInt!="number")
+    if (number == "") throw 'Phone number cannot be empty!';
+    if(typeof number!="number")
     {
       throw "Enter numerical values only for the phone number. Do not include +, -, or ()!";
     }
-    if(interestInt.length > 25)
+    if(number.length > 25)
     {
       throw "A phone number can have a maximum of 25 digits."
     }
 
     let newInterest = {
+        name: name,
         number: number
     };
 

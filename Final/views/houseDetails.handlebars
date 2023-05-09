@@ -48,6 +48,36 @@
     {{/if}}
 </article>
 
+{{#unless sameUser}}
+    <form action="/houses/{{house._id}}/interest" method="POST" class="interest-form">
+        <div>
+            <h3>Interested? Send your details here: </h3>
+            <label for="interestName">Name:</label>
+            <input type="text" name="interestName" cols="26" rows="1" id="interestName" >
+            <label for="interestInput">Phone Number (do not include () or -): </label>
+            <textarea name="interestInput" cols="26" rows="1" id="interestInput" ></textarea>
+            <button type="submit" id="submitButton" onclick="validateInterest()">Send</button><br>
+            <span style="color:red" id="errorName" hidden></span><br>
+            <span style="color:red" id="errorInterest" hidden></span>
+        </div>
+    </form>
+{{/unless}}
+
+{{#if house.interest}}
+    {{#if sameUser}}
+        <h2 class="house-post">Interested Users:</h2>
+        <article class="comment-element">
+            {{#each house.interest}}
+                <div class="comments-div">
+                    <div class="comment-details">
+                        <p>Name: {{this.name}} <br>Phone Number: {{this.number}}</p>
+                    </div>
+                </div>
+            {{/each}}
+        </article>
+    {{/if}}
+{{/if}}
+
 
 <form method="POST" class="comments-form">
     <div>
@@ -72,32 +102,6 @@
             </div>
         {{/each}}
     </article>
-{{/if}}
-
-{{#unless sameUser}}
-    <form method="POST" class="interest-form">
-        <div>
-            <label for="interestInput">Interested? Send your phone number: </label>
-            <textarea name="interestInput" cols="26" rows="1" id="interestInput" ></textarea>
-            <button type="submit" id="submitButton" onclick="validateInterest()">Send</button>
-            <span style="color:red" id="errorComment" hidden></span>
-        </div>
-    </form>
-{{/unless}}
-
-{{#if house.interest}}
-    {{#if sameUser}}
-        <h2 class="house-post">Interested Users:</h2>
-        <article class="comment-element">
-            {{#each house.interest}}
-                <div class="comments-div">
-                    <div class="comment-details">
-                        <p>{{this}}</p>
-                    </div>
-                </div>
-            {{/each}}
-        </article>
-    {{/if}}
 {{/if}}
 
 <script src="../public/js/houseDetails_validator.js"></script>

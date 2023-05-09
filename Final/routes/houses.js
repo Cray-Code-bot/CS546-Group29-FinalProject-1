@@ -329,10 +329,12 @@ router
 
 // Interest Check Code:
 router.post('/:id/interest',async (req, res) => {
+  let interestInt=parseInt(req.body.interestInput);
+  let name = req.body.interestName;
   try {
     req.params.id = validation.checkId(req.params.id, 'Id URL Param');
-    if (req.params.id.trim() == "") throw 'Phone number cannot be empty!';
-    let interestInt=parseInt(req.params.id.trim());
+    name = validation.checkName(name, 'Name')
+    if (interestInt == "") throw 'Phone number cannot be empty!';
     if(typeof interestInt!="number")
     {
       throw "Enter numerical values only for the phone number. Do not include +, -, or ()!";
@@ -346,10 +348,9 @@ router.post('/:id/interest',async (req, res) => {
   }
 
   try {
-    const newInterest = await interestData.createInterest(interestInput);
+    const newInterest = await interestData.createInterest(req.params.id, name, interestInt);
     if (newInterest != true) throw 'A phone number cannot be added!'
-    const house = await housesData.getById(req.params.id);
-    return res.render('houseDetails', {house});
+    return res.redirect(`/houses/${req.params.id}`);
   } catch (e) {
     res.status(400).render('houses/error', {title: 'error', message: e});
   }
