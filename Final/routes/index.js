@@ -10,7 +10,11 @@ const constructorMethod = (app) => {
   app.use('/reviews', reviewsRoutes);
   //app.use(express.static('../Final/static')); 
   app.use('/about', (req, res) => {
-    res.render("about", {title: "About Us", demopic: "../Final/static/demopic.jpg"});
+    let user_logged = false;
+    if (req.session.user) {
+      user_logged = true;
+    }
+    res.render("about", {title: "About Us", demopic: "../Final/static/demopic.jpg", user_logged: user_logged});
   });
 
   app.use("/", auth_routes);

@@ -1,8 +1,18 @@
 <h1>About Us</h1>
+{{#unless user_logged}}
 <div class="user-nav">
     <a class="all_accomodations" href="/Login">Login</a>
     <a class="create_post" href="/Register">Register</a>
 </div>
+{{/unless}}
+{{#if user_logged}}
+<div class="user-nav">
+    <a class="all_accomodations" href="/dashboard">All Accomodations</a>
+    <a class="create_post" href="/houses/add">Create Post</a>
+    <a class="user_profile" href="/userProfile">User Profile</a>
+    <a class="logout" href="/logout">Logout</a>
+</div>
+{{/if}}
 <article class="main-element">
     <div class>
         <p>We are a group of students who understand the struggles of searching for living accommodations-- so we invented LaunchLiving.
