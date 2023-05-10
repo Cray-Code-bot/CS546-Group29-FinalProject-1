@@ -4,7 +4,7 @@
 
 We are a group of students who understand the struggles of searching for living accommodations-- so we invented LaunchLiving. LaunchLiving is an accommodations searching app that removes the need to post revealing information. It puts all relevant information of an accommodation in an easy-to-access space. We hope to take the stress from living accommodations searching so users have more time for the things they enjoy.
 
-1. Open Visual studio and run "npm run seed"
+1. Open Visual studio, set the final folder as your current working directory and run "npm run seed"
 2. Once seeding is finished, you'll see a message "Database seeded successfully"
 3. After receving the message, run "npm start". This command should start the application and you'll receive a message on console that
 "We've now got a server!
