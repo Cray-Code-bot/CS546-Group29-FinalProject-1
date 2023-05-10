@@ -91,6 +91,7 @@ async function main() {
     );
     const user10 = user10InsertedInfo.user;
 
+    let house1ImageUrls=["https://res.cloudinary.com/djnwq0ee6/image/upload/v1683685901/pnipa1hvhjzkgqh1308k.jpg","https://res.cloudinary.com/djnwq0ee6/image/upload/v1683687309/ybjwgl9mkis6c0rztqty.jpg"]
     const house1 = await housesData.create({
       roomType: '1BHK',
       roomCategory: 'private',
@@ -100,7 +101,7 @@ async function main() {
       rent: '1500',
       address: '123 Main St, City Center',
       description: 'A beautiful house in the city center',
-      imageUrl: 'https://example.com/house1.jpg',
+      imageUrls: house1ImageUrls,
       postDate: new Date().toLocaleString(),
       interest: 'general',
     }, user1.emailAddress);
@@ -113,6 +114,7 @@ async function main() {
 
     await reviewsData.createReview(user1, house1._id, review1);
 
+    let house2ImageUrls=["https://res.cloudinary.com/djnwq0ee6/image/upload/v1683685902/rjtsyekksgbphxtiyd3j.jpg","https://res.cloudinary.com/djnwq0ee6/image/upload/v1683687212/bskt6dqwatpxdx2zwcmm.jpg"]
     const house2 = await housesData.create({
       roomType: '2BHK',
       roomCategory: 'Shared',
@@ -122,11 +124,12 @@ async function main() {
       rent: '1800',
       address: '1123 Main St, City Center',
       description: 'A good house in the city',
-      imageUrl: 'https://example.com/house2.jpg',
+      imageUrls: house2ImageUrls,
       postDate: new Date().toLocaleString(),
       interest: 'general',
     }, user2.emailAddress);
 
+    let hosue3ImageUrls=["https://res.cloudinary.com/djnwq0ee6/image/upload/v1683685903/ngy3firyfdatys5nqwyo.jpg","https://res.cloudinary.com/djnwq0ee6/image/upload/v1683686838/fiookdvm2psrvy5m946b.jpg"]
     const house3 = await housesData.create({
       roomType: '3BHK',
       roomCategory: 'Shared',
@@ -136,11 +139,12 @@ async function main() {
       rent: '1480',
       address: '203 Main St, City Center',
       description: 'A good place in the city',
-      imageUrl: 'https://example.com/house3.jpg',
+      imageUrls: hosue3ImageUrls,
       postDate: new Date().toLocaleString(),
       interest: 'general',
     }, user3.emailAddress);
 
+    let house4ImageUrl=["https://res.cloudinary.com/djnwq0ee6/image/upload/v1683685903/khpyfdiahgdxalyt754t.jpg","https://res.cloudinary.com/djnwq0ee6/image/upload/v1683668236/dhmzh48qrxs3xv9gqane.jpg"]
     const house4 = await housesData.create({
       roomType: '3BHK',
       roomCategory: 'Shared',
@@ -150,11 +154,12 @@ async function main() {
       rent: '1280',
       address: '203 Main St, City Center',
       description: 'A good place in the city',
-      imageUrl: 'https://example.com/house4.jpg',
+      imageUrls: house4ImageUrl,
       postDate: new Date().toLocaleString(),
       interest: 'general',
     }, user4.emailAddress);
 
+    let house5ImageUrl=["https://res.cloudinary.com/djnwq0ee6/image/upload/v1683685904/xhdqwerxbw5azhevoota.jpg"]
     const house5 = await housesData.create({
       roomType: '3BHK',
       roomCategory: 'Shared',
@@ -164,11 +169,13 @@ async function main() {
       rent: '1180',
       address: '2013 Main St, City Center',
       description: 'A good place in the city',
-      imageUrl: 'https://example.com/house5.jpg',
+      imageUrls: house5ImageUrl,
       postDate: new Date().toLocaleString(),
       interest: 'general',
     }, user5.emailAddress);
 
+    let house6ImageUrls=["https://res.cloudinary.com/djnwq0ee6/image/upload/v1683668237/ady3ahwzxjhx2xnw9mod.jpg","https://res.cloudinary.com/djnwq0ee6/image/upload/v1683685904/vutug3lff2fnp82zpmff.jpg",
+    "https://res.cloudinary.com/djnwq0ee6/image/upload/v1683668236/dhmzh48qrxs3xv9gqane.jpg"]
     const house6 = await housesData.create({
       roomType: '1BHK',
       roomCategory: 'Private',
@@ -178,11 +185,12 @@ async function main() {
       rent: '1280',
       address: '2011 Main St, City Center',
       description: 'A good place in the city',
-      imageUrl: 'https://example.com/house6.jpg',
+      imageUrls: house6ImageUrls,
       postDate: new Date().toLocaleString(),
       interest: 'general',
     }, user6.emailAddress);
 
+    let house7ImageUrls=["https://res.cloudinary.com/djnwq0ee6/image/upload/v1683685905/wlpwgprjwuzphkqnq9d5.jpg","https://res.cloudinary.com/djnwq0ee6/image/upload/v1683673488/gc6i33ubkgsuxdubafzu.jpg"]
     const house7 = await housesData.create({
       roomType: '2BHK',
       roomCategory: 'Shared',
@@ -192,11 +200,13 @@ async function main() {
       rent: '1280',
       address: '2011 Main St, City Center',
       description: 'A good place in the city',
-      imageUrl: 'https://example.com/house7.jpg',
+      imageUrls: house7ImageUrls,
       postDate: new Date().toLocaleString(),
       interest: 'general',
     }, user7.emailAddress);
 
+    let imageshouse8=["https://res.cloudinary.com/djnwq0ee6/image/upload/v1683686838/fiookdvm2psrvy5m946b.jpg",
+  "https://res.cloudinary.com/djnwq0ee6/image/upload/v1683686839/zlmvczgoo52wcteas4i1.jpg","https://res.cloudinary.com/djnwq0ee6/image/upload/v1683686840/d2ug0ftuw0pppikaicx2.jpg"]
     const house8 = await housesData.create({
       roomType: '2BHK',
       roomCategory: 'Shared',
@@ -206,11 +216,12 @@ async function main() {
       rent: '1310',
       address: '1021 Main St, City Center',
       description: 'A good place in the city',
-      imageUrl: 'https://example.com/house8.jpg',
+      imageUrls: imageshouse8,
       postDate: new Date().toLocaleString(),
       interest: 'general',
     }, user8.emailAddress);
 
+    let imageshouse9=["https://res.cloudinary.com/djnwq0ee6/image/upload/v1683687212/bskt6dqwatpxdx2zwcmm.jpg","https://res.cloudinary.com/djnwq0ee6/image/upload/v1683687212/k4pro4bwzqoqqfz4mtad.jpg"]
     const house9 = await housesData.create({
       roomType: '3BHK',
       roomCategory: 'Shared',
@@ -220,11 +231,12 @@ async function main() {
       rent: '1800',
       address: '1021 Main St, City Center',
       description: 'A good place in the city',
-      imageUrl: 'https://example.com/house9.jpg',
+      imageUrls: imageshouse9,
       postDate: new Date().toLocaleString(),
       interest: 'general',
     }, user9.emailAddress);
 
+    let imageshouse10=["https://res.cloudinary.com/djnwq0ee6/image/upload/v1683687309/ybjwgl9mkis6c0rztqty.jpg","https://res.cloudinary.com/djnwq0ee6/image/upload/v1683687310/j7ej7rhf3h1zkarsitbv.jpg"]
     const house10 = await housesData.create({
       roomType: '1BHK',
       roomCategory: 'Private',
@@ -234,7 +246,7 @@ async function main() {
       rent: '1450',
       address: '1011 Main St, City Center',
       description: 'A good place in the city',
-      imageUrl: 'https://example.com/house10.jpg',
+      imageUrls: imageshouse10,
       postDate: new Date().toLocaleString(),
       interest: 'general',
     }, user10.emailAddress);
