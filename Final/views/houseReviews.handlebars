@@ -13,7 +13,11 @@
         <input type="number" name="rating" id="rating" step="0.1" min="1" max="5" required>
         <label for="reviewText">Review:</label>
         <textarea name="review" id="reviewText" required></textarea>
-        <button type="submit">Add a Review</button>
+        <button type="submit" onclick="validateReview()">Add a Review</button>
+        <br>
+        <span style="color:red" id="ratingError" hidden></span>
+        <br>
+        <span style="color:red" id="reviewError" hidden></span>
     </div>
 </form>
 
@@ -39,6 +43,29 @@
 {{else}}No Review Yet{{/if}}
 
 <script>
+  let rating = document.getElementById("rating");
+  let review = document.getElementById("reviewText");
+  let ratingError = document.getElementById("ratingError");
+  let reviewError = document.getElementById("reviewError");
+
+  function validateReview () {
+    if (!rating.value || rating.value.trim() == "") {
+        ratingError.hidden = false;
+        ratingError.textContent = "rating cannot be empty";
+    } else if (rating.value < 1 || rating.value > 5) {
+        ratingError.hidden = false;
+        ratingError.textContent = "rating cannot be less than 1 or more than 5";
+    } else {
+        ratingError.hidden = true;
+    }
+    if (!review.value || review.value.trim() == "") {
+        reviewError.hidden = false;
+        reviewError.textContent = "review cannot be empty";
+    } else {
+        reviewError.hidden = true;
+    }
+  }
+
   document.getElementById("ajax-review-form").addEventListener("submit", async (event) => {
     event.preventDefault();
 

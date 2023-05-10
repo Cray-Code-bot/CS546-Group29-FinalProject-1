@@ -56,7 +56,7 @@ router.post('/:accommodationId/:reviewId/delete', async (req, res) => {
   
     try {
         await reviewsData.deleteReview(accommodationId, userEmail, reviewId);
-        res.status(200).render('reviews/message', {title: 'Review Deleted', message: 'Review deleted successfully', accommodationId: accommodationId});
+        res.redirect(`/reviews/${accommodationId}`);
     } catch (e) {
         console.error('Error during review deletion:', e);
         res.status(400).render('reviews/message', {title: 'Review Deletion Error',  message: 'Review not deleted', error: e });

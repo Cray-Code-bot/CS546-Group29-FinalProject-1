@@ -292,7 +292,7 @@ router
     try {
       req.params.id = validation.checkId(req.params.id, 'Id URL Param');
       const house = await housesData.getById(req.params.id);
-      const ratings = house.reviews.map(review => review.rating);
+      let ratings = house.reviews.map(review => review.rating);
       const userInfo = await getUserDetails(req.params.id);
       let sameUser = false;
       if (req.session.user.emailAddress == house.emailAddress) {
@@ -300,6 +300,7 @@ router
       }
       let avg_rating = "";
       if (ratings.length > 0) {
+        ratings = ratings.map(rating => parseFloat(rating));
         avg_rating = (ratings.reduce((total, current) => total + current, 0)/ratings.length).toFixed(2);
       }
       return res.status(200).render('houseDetails', { title: 'houseDetails', house: house, rating: avg_rating, 
