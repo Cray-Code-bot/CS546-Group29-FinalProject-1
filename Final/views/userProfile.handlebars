@@ -20,11 +20,11 @@
         </div>
         <div class="image-container">
             <img class="image" 
-            src ="{{#if imageUrls.[0]}}{{imageUrls.[0]}}{{else}}../public/images/No_Image_Available.jpg {{/if}}">
+            src ="{{#if imageUrls.[0]}}{{imageUrls.[0]}}{{else}}../public/images/No_Image_Available.jpg {{/if}}"
+            alt = "{{type}} {{category}} in {{city}}, {{state}}">
         </div>
         <div class="address-details">
-            <address>Address: {{#if address.line1}}{{address.line1}}{{else}}N/A{{/if}}, 
-                {{#if address.line2}}{{address.line2}}{{/if}},
+            <address>Address: {{#if address}}{{address}}{{else}}N/A{{/if}},
                 {{#if city}}{{city}}{{else}}N/A{{/if}},
                 {{#if state}}{{state}}{{else}}N/A{{/if}}
                 {{#if zip}}{{zip}}{{else}}N/A{{/if}}
