@@ -91,8 +91,10 @@
             </select>
         </div>
         <div class="search-group">
-            <button type="submit" class="search-button">Search</button>
+            <button type="submit" class="search-button" onclick="checkSearchTerm()">Search</button>
         </div>
+        <br>
+        <span style="color:red" id="citySearchError" hidden></span> <br>
     </div>
 </form>
 
@@ -150,3 +152,5 @@
     </article>
     {{/each}}
 </div>
+
+<script src="../../public/js/dashboard_validator.js"></script>
