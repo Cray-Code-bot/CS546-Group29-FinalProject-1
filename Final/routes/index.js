@@ -20,7 +20,14 @@ const constructorMethod = (app) => {
   app.use("/", auth_routes);
 
   app.use("*", (req, res) => {
-    res.sendStatus(404);
+    if(req.session.user)
+    {
+      res.redirect('/dashboard');
+    }
+    else
+    {
+      res.redirect('/about');
+    }
   });
 };
 export default constructorMethod;
