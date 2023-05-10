@@ -7,19 +7,26 @@
 
 {{#if addReview}}
 <h2 class="house-post">Add your review</h2>
-<form class="review-form" action="/reviews/{{house._id}}" method="POST">
+<form id="ajax-review-form" class="review-form" action="/reviews/{{house._id}}" method="POST">
     <div>
         <label for="rating">Rating (1-5)</label>
         <input type="number" name="rating" id="rating" step="0.1" min="1" max="5" required>
         <label for="reviewText">Review:</label>
         <textarea name="review" id="reviewText" required></textarea>
-        <button type="submit">Add a Review</button>
+        <button type="submit" onclick="validateReview()">Add a Review</button>
+        <br>
+        <span style="color:red" id="ratingError" hidden></span>
+        <br>
+        <span style="color:red" id="reviewError" hidden></span>
     </div>
 </form>
 
 {{/if}}
 
 {{#if house.reviews}}
+<p>
+    <a href="/houses/{{house._id}}">back to previous page</a>
+</p>
 <h2 class="house-post">Reviews: </h2>
 {{#each house.reviews}}
       <div class="review-element">
@@ -34,3 +41,60 @@
       </div>
 {{/each}}
 {{else}}No Review Yet{{/if}}
+
+<script>
+  let rating = document.getElementById("rating");
+  let review = document.getElementById("reviewText");
+  let ratingError = document.getElementById("ratingError");
+  let reviewError = document.getElementById("reviewError");
+
+  function validateReview () {
+    if (!rating.value || rating.value.trim() == "") {
+        ratingError.hidden = false;
+        ratingError.textContent = "rating cannot be empty";
+    } else if (rating.value < 1 || rating.value > 5) {
+        ratingError.hidden = false;
+        ratingError.textContent = "rating cannot be less than 1 or more than 5";
+    } else {
+        ratingError.hidden = true;
+    }
+    if (!review.value || review.value.trim() == "") {
+        reviewError.hidden = false;
+        reviewError.textContent = "review cannot be empty";
+    } else {
+        reviewError.hidden = true;
+    }
+  }
+
+  document.getElementById("ajax-review-form").addEventListener("submit", async (event) => {
+    event.preventDefault();
+
+    const accommodationId = '{{house._id}}';
+    const rating = document.getElementById("rating").value;
+    const reviewText = document.getElementById("reviewText").value;
+
+    const reviewData = {
+      rating,
+      review: reviewText,
+    };
+
+    try {
+      const response = await fetch(`/reviews/${accommodationId}`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(reviewData),
+      });
+
+      if (response.ok) {
+        alert("Review submitted successfully");
+        location.reload();
+      } else {
+        throw new Error(`Error submitting review: ${response.statusText}`);
+      }
+    } catch (error) {
+      alert(`Error: ${error.message}`);
+    }
+  });
+</script>

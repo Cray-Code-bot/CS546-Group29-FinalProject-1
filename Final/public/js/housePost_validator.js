@@ -2,26 +2,34 @@ let form = document.querySelector(".housepost-form");
 let rommType = document.getElementById("roomType");
 let roomCategory = document.getElementById("roomCategory");
 let gender = document.getElementById("gender");
+let address = document.getElementById("address");
 let city = document.getElementById("city");
 let state = document.getElementById("state");
 let rent = document.getElementById("rent");
+let images = document.getElementById("images");
 let description = document.getElementById("description");
 let roomTypeError = document.getElementById("roomTypeError");
 let roomCategoryError = document.getElementById("roomCategoryError");
 let genderError = document.getElementById("genderError");
+let addressError = document.getElementById("addressError");
 let cityError = document.getElementById("cityError");
 let stateError = document.getElementById("stateError");
 let rentError = document.getElementById("rentError");
+let imagesError = document.getElementById("imagesError");
 let descriptionError = document.getElementById("descriptionError");
 let roomTypeCheck = false;
 let roomCategoryCheck = false;
 let genderCheck = false;
+let addressCheck = false;
 let cityCheck = false;
 let stateCheck = false;
 let rentCheck = false;
+let imagesCheck = false;
 let descriptionCheck = false;
+const addressRegex = /^[0-9a-zA-Z\s,'-]*$/;
 const cityRegex = /^[a-zA-Z\s]+$/i;
-const rentRegex = /[0-9]+/
+const rentRegex = /[0-9]+/;
+const imagesRegex = /\.jpe?g$/;
 const descriptionRegex = /^[0-9!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]*$/i;
 const statesArray = [
     'Alabama', 'Alaska', 'Arizona', 'Arkansas', 'California', 'Colorado', 'Connecticut', 'Delaware',
@@ -75,6 +83,19 @@ function house_validator() {
         genderCheck = true;
     }
 
+    if (!address.value || address.value.trim() == '') {
+        addressError.hidden = false;
+        addressError.textContent = "Address cannot be empty";
+        addressCheck = false;
+    } else if (!addressRegex.test(address.value)) {
+        addressError.hidden = false;
+        addressError.textContent = "Address can only be letters, numbers, whitespace, - or '";
+        addressCheck = false;
+    } else {
+        addressError.hidden = true;
+        addressCheck = true;
+    }
+
     if (!city.value || city.value.trim() == "") {
         cityError.hidden = false;
         cityError.textContent = "City cannot be empty";
@@ -118,23 +139,33 @@ function house_validator() {
         rentCheck = true;
     }
 
+    if (!images.files || images.files.length <= 0) {
+        imagesError.hidden = false;
+        imagesError.textContent = "You should upload atleast 1 image";
+        imagesCheck = false;
+    } else if (!imagesRegex.test(images.value)) {
+        imagesError.hidden = false;
+        imagesError.textContent = "You should upload either jpg/jpeg only";
+        imagesCheck = false;
+    } else {
+        imagesError.hidden = true;
+        imagesCheck = true;
+    }
+
     if (!description.value || description.value.trim() == "") {
-        console.log("Desciprion here!")
         descriptionError.hidden = false;
         descriptionError.textContent = "Description cannot be empty";
         descriptionCheck = false;
     } else if (descriptionRegex.test(description.value)) {
-        console.log("description regex")
         descriptionError.hidden = false;
         descriptionError.textContent = "Description cannot be special characters or numbers only";
         descriptionCheck = false;
     } else {
-        console.log("desciption passed")
         descriptionError.hidden = true;
         descriptionCheck = true;
     }
 
-    if (roomTypeCheck && roomCategoryCheck && genderCheck && cityCheck && stateCheck && rentCheck && descriptionCheck) {
+    if (roomTypeCheck && roomCategoryCheck && genderCheck && cityCheck && stateCheck && rentCheck && descriptionCheck && addressCheck && imagesCheck) {
         preventEvent = false;
     } else{
         preventEvent = true;

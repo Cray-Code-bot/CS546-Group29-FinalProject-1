@@ -160,9 +160,10 @@ router.route("/dashboard")
             housesList[i].firstName = userInfo.firstName;
             housesList[i].lastName = userInfo.lastName;
           }
-          const ratings = housesList[i].reviews.map(review => review.rating);
+          let ratings = housesList[i].reviews.map(review => review.rating);
           let avg_rating = "";
           if (ratings.length > 0) {
+            ratings = ratings.map(rating => parseFloat(rating));
             housesList[i].avg_rating = (ratings.reduce((total, current) => total + current, 0)/ratings.length).toFixed(2);
           }
         }

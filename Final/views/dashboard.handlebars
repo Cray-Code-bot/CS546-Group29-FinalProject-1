@@ -87,12 +87,14 @@
             <select name="gender" id="gender" class="search-input">
                 <option value="male">Male</option>
                 <option value="female">Female</option>
-                <option value="anyGender" selected>Any</option>
+                <option value="any" selected>Any</option>
             </select>
         </div>
         <div class="search-group">
-            <button type="submit" class="search-button">Search</button>
+            <button type="submit" class="search-button" onclick="checkSearchTerm()">Search</button>
         </div>
+        <br>
+        <span style="color:red" id="citySearchError" hidden></span> <br>
     </div>
 </form>
 
@@ -150,3 +152,5 @@
     </article>
     {{/each}}
 </div>
+
+<script src="../../public/js/dashboard_validator.js"></script>

@@ -23,8 +23,8 @@
                 alt="{{house.type}} {{house.category}} in {{house.city}}, {{house.state}}">
             </div>
         {{/each}}
-        <a class="prev" onclick="plusSlides(-1)">Previous</a>
-        <a class="next" onclick="plusSlides(1)">Next</a>
+        <button type="submit" class="prev" onclick="plusSlides(-1)">Previous</button>
+        <button type="submit" class="next" onclick="plusSlides(1)">Next</button>
     </div>
     <br>
     <div class="address-details">
@@ -32,6 +32,7 @@
             {{#if house.city}}{{house.city}}{{else}}N/A{{/if}},
             {{#if house.state}}{{house.state}}{{else}}N/A{{/if}}
         </address>
+        <p>Gender Preference: {{house.gender}}</p>
         <p>Description: {{house.description}}</p>
     </div>
     {{#if sameUser}}
@@ -53,10 +54,10 @@
         <div>
             <h3>Interested? Send your details here: </h3>
             <label for="interestName">Name:</label>
-            <input type="text" name="interestName" cols="26" rows="1" id="interestName" >
+            <input type="text" name="interestName" id="interestName" >
             <label for="interestInput">Phone Number (do not include () or -): </label>
             <textarea name="interestInput" cols="26" rows="1" id="interestInput" ></textarea>
-            <button type="submit" id="submitButton" onclick="validateInterest()">Send</button><br>
+            <button type="submit" id="submit-button" onclick="validateInterest()">Send</button><br>
             <span style="color:red" id="errorName" hidden></span><br>
             <span style="color:red" id="errorInterest" hidden></span>
         </div>
